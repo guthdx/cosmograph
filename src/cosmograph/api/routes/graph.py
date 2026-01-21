@@ -116,7 +116,7 @@ async def download_csv(job_id: str) -> FileResponse:
         job_id: The job identifier returned from POST /api/extract
 
     Returns:
-        ZIP file containing nodes.csv and edges.csv
+        ZIP file containing graph_nodes.csv and graph_data.csv
 
     Raises:
         HTTPException 404: If job_id not found or CSV files missing
@@ -143,8 +143,9 @@ async def download_csv(job_id: str) -> FileResponse:
             detail="Job completed but output directory not available",
         )
 
-    nodes_csv = job.output_dir / "nodes.csv"
-    edges_csv = job.output_dir / "edges.csv"
+    # CSVGenerator uses graph_nodes.csv and graph_data.csv filenames
+    nodes_csv = job.output_dir / "graph_nodes.csv"
+    edges_csv = job.output_dir / "graph_data.csv"
 
     if not nodes_csv.exists() or not edges_csv.exists():
         raise HTTPException(
@@ -157,7 +158,7 @@ async def download_csv(job_id: str) -> FileResponse:
     csv_dir = temp_dir / "csv_export"
     csv_dir.mkdir()
 
-    # Copy CSV files to temp directory
+    # Copy CSV files to temp directory with user-friendly names
     shutil.copy(nodes_csv, csv_dir / "nodes.csv")
     shutil.copy(edges_csv, csv_dir / "edges.csv")
 
