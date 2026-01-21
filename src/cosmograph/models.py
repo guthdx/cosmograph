@@ -1,5 +1,6 @@
 """Data models for graph nodes and edges."""
 
+import re
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -48,6 +49,7 @@ class Graph:
 
     nodes: dict[str, Node] = field(default_factory=dict)
     edges: list[Edge] = field(default_factory=list)
+    _edge_keys: set[tuple[str, str, str]] = field(default_factory=set, repr=False)
     title: str = "Knowledge Graph"
     description: str = ""
 
@@ -80,18 +82,17 @@ class Graph:
         if source_id == target_id:
             return False
 
-        # Check for duplicates
-        for edge in self.edges:
-            if edge.source == source_id and edge.target == target_id and edge.edge_type == edge_type:
-                return False
+        # O(1) duplicate check using set
+        edge_key = (source_id, target_id, edge_type)
+        if edge_key in self._edge_keys:
+            return False
 
+        self._edge_keys.add(edge_key)
         self.edges.append(Edge(source_id, target_id, edge_type))
         return True
 
     def _clean_id(self, text: str) -> str:
         """Clean text to create valid node ID."""
-        import re
-
         cleaned = re.sub(r"[^\w\s\-]", "", str(text))
         cleaned = re.sub(r"\s+", " ", cleaned).strip()
         return cleaned[:100]
