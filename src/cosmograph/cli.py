@@ -1,7 +1,7 @@
 """Command-line interface for Cosmograph."""
 
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 import yaml
@@ -12,7 +12,15 @@ from rich.table import Table
 
 from . import __version__
 from .config import PatternConfig, load_patterns
-from .extractors import GenericExtractor, LegalDocumentExtractor, PdfExtractor, TextExtractor
+from .extractors import (
+    HAS_ANTHROPIC,
+    GenericExtractor,
+    LegalDocumentExtractor,
+    LlmExtractor,
+    OperatorDeclinedError,
+    PdfExtractor,
+    TextExtractor,
+)
 from .generators import CSVGenerator, HTMLGenerator
 from .models import Graph
 
@@ -46,13 +54,17 @@ def generate(
     output: Path = typer.Option(
         Path("./output"), "-o", "--output", help="Output directory for generated files"
     ),
-    title: str = typer.Option("Knowledge Graph", "-t", "--title", help="Title for the visualization"),
-    extractor: str = typer.Option(
-        "auto", "-e", "--extractor", help="Extractor type: auto, legal, text, generic, pdf"
+    title: str = typer.Option(
+        "Knowledge Graph", "-t", "--title", help="Title for the visualization"
     ),
-    pattern: str = typer.Option("*.txt", "-p", "--pattern", help="File pattern when input is directory"),
+    extractor: str = typer.Option(
+        "auto", "-e", "--extractor", help="Extractor type: auto, legal, text, generic, pdf, llm"
+    ),
+    pattern: str = typer.Option(
+        "*.txt", "-p", "--pattern", help="File pattern when input is directory"
+    ),
     patterns_file: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option(
             "--patterns",
             exists=True,
@@ -64,9 +76,14 @@ def generate(
     ] = None,
     html_only: bool = typer.Option(False, "--html-only", help="Only generate HTML, skip CSV"),
     open_browser: bool = typer.Option(True, "--open/--no-open", help="Open result in browser"),
+    no_confirm: bool = typer.Option(
+        False,
+        "--no-confirm",
+        help="Skip confirmation prompt for LLM extraction (use with caution)",
+    ),
 ):
     """Generate a knowledge graph visualization from documents."""
-    console.print(f"\n[bold cyan]Cosmograph[/bold cyan] - Knowledge Graph Generator\n")
+    console.print("\n[bold cyan]Cosmograph[/bold cyan] - Knowledge Graph Generator\n")
 
     # Validate input
     if not input_path.exists():
@@ -88,7 +105,7 @@ def generate(
     graph = Graph(title=title)
 
     # Load pattern configuration if provided
-    pattern_config: Optional[PatternConfig] = None
+    pattern_config: PatternConfig | None = None
     if patterns_file:
         try:
             pattern_config = load_patterns(patterns_file)
@@ -101,7 +118,7 @@ def generate(
             raise typer.Exit(1)
 
     # Select extractor
-    extractor_instance = _get_extractor(extractor, graph, pattern_config)
+    extractor_instance = _get_extractor(extractor, graph, pattern_config, no_confirm)
 
     # Process files
     with Progress(
@@ -115,6 +132,9 @@ def generate(
             progress.update(task, description=f"Processing {filepath.name}...")
             try:
                 extractor_instance.extract(filepath)
+            except OperatorDeclinedError:
+                console.print("[yellow]LLM extraction declined by operator[/yellow]")
+                raise typer.Exit(0)  # Not an error, just a user decision
             except Exception as e:
                 console.print(f"[yellow]Warning:[/yellow] Failed to process {filepath.name}: {e}")
             progress.advance(task)
@@ -147,7 +167,9 @@ def generate(
 
 @app.command()
 def stats(
-    input_path: Path = typer.Argument(..., help="Path to graph_nodes.csv or directory with CSV files"),
+    input_path: Path = typer.Argument(
+        ..., help="Path to graph_nodes.csv or directory with CSV files"
+    ),
 ):
     """Show statistics for an existing graph."""
     import csv
@@ -169,7 +191,7 @@ def stats(
     # Count nodes by category
     categories = {}
     total_nodes = 0
-    with open(nodes_file, "r", encoding="utf-8") as f:
+    with open(nodes_file, encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             total_nodes += 1
@@ -179,7 +201,7 @@ def stats(
     # Count edges
     total_edges = 0
     if edges_file.exists():
-        with open(edges_file, "r", encoding="utf-8") as f:
+        with open(edges_file, encoding="utf-8") as f:
             total_edges = sum(1 for _ in f) - 1  # Subtract header
 
     stats = {"nodes": total_nodes, "edges": total_edges, "categories": categories}
@@ -217,7 +239,10 @@ def serve(
 
 
 def _get_extractor(
-    extractor_type: str, graph: Graph, config: Optional[PatternConfig] = None
+    extractor_type: str,
+    graph: Graph,
+    config: PatternConfig | None = None,
+    no_confirm: bool = False,
 ):
     """Get the appropriate extractor based on type."""
     if extractor_type == "legal":
@@ -230,6 +255,15 @@ def _get_extractor(
         return GenericExtractor(graph)
     elif extractor_type == "pdf":
         return PdfExtractor(graph)
+    elif extractor_type == "llm":
+        if not HAS_ANTHROPIC:
+            console.print("[red]Error:[/red] LLM extractor requires anthropic package.")
+            console.print("[dim]Install with: pip install cosmograph[llm][/dim]")
+            raise typer.Exit(1)
+        if LlmExtractor is None:
+            console.print("[red]Error:[/red] LLM extractor failed to load.")
+            raise typer.Exit(1)
+        return LlmExtractor(graph, interactive=not no_confirm)
     else:  # auto
         return LegalDocumentExtractor(graph)  # Default to legal for now
 
