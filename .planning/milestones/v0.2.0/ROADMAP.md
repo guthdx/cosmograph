@@ -120,19 +120,27 @@ Plans:
 
 ---
 
-### Phase 5: FastAPI Backend
+### Phase 5: FastAPI Backend ✓
 
-**Status**: Planned (2026-01-21)
+**Status**: Complete (2026-01-21)
 **Goal**: HTTP API for web interface
 
-**Plans:** 5 plans
+**Plans:** 5/5 complete
 
 Plans:
-- [ ] 05-01-PLAN.md — Add FastAPI dependencies and create ExtractionService
-- [ ] 05-02-PLAN.md — Create FastAPI app skeleton with health endpoint
-- [ ] 05-03-PLAN.md — Implement extraction endpoints (upload, job status)
-- [ ] 05-04-PLAN.md — Implement graph retrieval, download, and SSE progress
-- [ ] 05-05-PLAN.md — Add API tests and refactor CLI to use service layer
+- [x] 05-01-PLAN.md — Add FastAPI dependencies and create ExtractionService
+- [x] 05-02-PLAN.md — Create FastAPI app skeleton with health endpoint
+- [x] 05-03-PLAN.md — Implement extraction endpoints (upload, job status)
+- [x] 05-04-PLAN.md — Implement graph retrieval, download, and SSE progress
+- [x] 05-05-PLAN.md — Add API tests and refactor CLI to use service layer
+
+**Results:**
+- ExtractionService (160 lines) for framework-agnostic business logic
+- FastAPI app with 6 endpoints, CORS, exception handlers
+- SSE progress streaming for real-time updates
+- 23 API tests + 18 service tests
+- CLI refactored to use ExtractionService (no duplication)
+- 169 total tests passing
 
 **Endpoints**:
 ```
@@ -144,18 +152,12 @@ GET  /api/download/{id}   - Download HTML visualization
 GET  /health              - Health check
 ```
 
-**Wave Structure**:
-- Wave 1: Plans 01, 02 (parallel - deps + service, app skeleton)
-- Wave 2: Plan 03 (extraction routes)
-- Wave 3: Plan 04 (graph routes + SSE)
-- Wave 4: Plan 05 (tests + CLI refactor)
-
 **Success Criteria**:
-- [ ] Can upload file via curl and get graph JSON
-- [ ] Progress updates available during processing
-- [ ] Error responses are helpful
-- [ ] CLI still works exactly as before
-- [ ] Health check returns {"status": "healthy"}
+- [x] Can upload file via curl and get graph JSON
+- [x] Progress updates available during processing
+- [x] Error responses are helpful
+- [x] CLI still works exactly as before
+- [x] Health check returns {"status": "healthy"}
 
 **Requirements Satisfied**: FR-4 (Web Interface - backend)
 

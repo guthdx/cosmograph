@@ -103,6 +103,7 @@ relationships:
 ### FR-4: Web Interface
 
 **Priority**: High (core deliverable)
+**Status**: Backend complete (Phase 5, 2026-01-21), Frontend pending (Phase 6)
 
 **User Story**: As an operator, I can upload documents and view results through a web browser instead of command line.
 
