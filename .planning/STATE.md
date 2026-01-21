@@ -4,17 +4,17 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 01-foundation-cleanup (1 of 7)
-**Plan**: 02 of 5 (complete)
+**Plan**: 03 of 5 (complete)
 **Status**: In progress
-**Last activity**: 2026-01-21 - Completed 01-02-PLAN.md
+**Last activity**: 2026-01-21 - Completed 01-03-PLAN.md
 
-Progress: [██░░░░░░░░] 2/5 plans in phase 01
+Progress: [███░░░░░░░] 3/5 plans in phase 01
 
 ## Progress
 
 | Phase | Status | Plans |
 |-------|--------|-------|
-| 01 | executing | 2/5 |
+| 01 | executing | 3/5 |
 | 02 | pending | 0/? |
 | 03 | pending | 0/? |
 | 04 | pending | 0/? |
@@ -28,6 +28,8 @@ Progress: [██░░░░░░░░] 2/5 plans in phase 01
 - **2026-01-21**: LLM costs absorbed as service delivery cost
 - **2026-01-21**: Hybrid deployment - local dev, Iyeska HQ infrastructure for production
 - **2026-01-21**: Use repr=False on internal tracking fields to keep repr clean (01-02)
+- **2026-01-21**: Class-level compiled patterns with _PATTERN naming convention for fixed patterns (01-03)
+- **2026-01-21**: Instance-level pattern compilation for configurable extractors (01-03)
 
 ## Blockers
 
@@ -39,6 +41,6 @@ Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska clien
 
 ## Session Continuity
 
-Last session: 2026-01-21T19:02:22Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-01-21T19:08:00Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
