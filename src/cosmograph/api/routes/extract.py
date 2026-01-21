@@ -1,14 +1,18 @@
 """File upload and extraction endpoints for Cosmograph API."""
 
+import asyncio
+import json
 import logging
 import shutil
 import tempfile
 from pathlib import Path
+from typing import AsyncGenerator
 
 from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
+from sse_starlette.sse import EventSourceResponse
 
 from ..deps import Job, JobStore, get_job_store
-from ..schemas import JobResponse
+from ..schemas import JobResponse, JobStatus
 from ...services.extraction import ExtractionService
 
 logger = logging.getLogger(__name__)
@@ -141,6 +145,60 @@ async def get_extraction_status(job_id: str) -> JobResponse:
         )
 
     return _job_to_response(job)
+
+
+@router.get("/extract/{job_id}/progress")
+async def extraction_progress(job_id: str) -> EventSourceResponse:
+    """Stream extraction progress via Server-Sent Events.
+
+    Connects to the progress stream and receives events until the job completes.
+    Events: progress (with status/progress/total), complete (with job_id), error.
+
+    Args:
+        job_id: The job identifier returned from POST /api/extract
+
+    Returns:
+        EventSourceResponse streaming progress updates
+    """
+    async def event_generator() -> AsyncGenerator[dict[str, str], None]:
+        store = get_job_store()
+
+        while True:
+            job = store.get_job(job_id)
+
+            if job is None:
+                yield {
+                    "event": "error",
+                    "data": json.dumps({"error": "Job not found"}),
+                }
+                break
+
+            yield {
+                "event": "progress",
+                "data": json.dumps({
+                    "status": job.status.value,
+                    "progress": job.progress,
+                    "total": job.total,
+                }),
+            }
+
+            if job.status in (JobStatus.completed, JobStatus.failed):
+                # Send final event with result or error
+                if job.status == JobStatus.completed:
+                    yield {
+                        "event": "complete",
+                        "data": json.dumps({"job_id": job_id}),
+                    }
+                else:
+                    yield {
+                        "event": "error",
+                        "data": json.dumps({"error": job.error}),
+                    }
+                break
+
+            await asyncio.sleep(0.5)  # Poll every 500ms
+
+    return EventSourceResponse(event_generator())
 
 
 def run_extraction(
