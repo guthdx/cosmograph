@@ -4,11 +4,11 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 05-fastapi-backend (5 of 7)
-**Plan**: 04 of 5
-**Status**: In progress
-**Last activity**: 2026-01-21 - Completed 05-04-PLAN.md (Graph & Download Endpoints)
+**Plan**: 05 of 5 (PHASE COMPLETE)
+**Status**: Phase complete
+**Last activity**: 2026-01-21 - Completed 05-05-PLAN.md (API Tests & CLI Refactor)
 
-Progress: [████░░░░░░] 4/7 phases complete
+Progress: [█████░░░░░] 5/7 phases complete
 
 ## Progress
 
@@ -18,7 +18,7 @@ Progress: [████░░░░░░] 4/7 phases complete
 | 02 | complete | 2/2 |
 | 03 | complete | 3/3 |
 | 04 | complete | 3/3 |
-| 05 | in progress | 4/5 |
+| 05 | complete | 5/5 |
 | 06 | pending | 0/? |
 | 07 | pending | 0/? |
 
@@ -64,6 +64,9 @@ Progress: [████░░░░░░] 4/7 phases complete
 - **2026-01-21**: SSE polling interval of 500ms for progress streaming (05-04)
 - **2026-01-21**: FileResponse for efficient file downloads (05-04)
 - **2026-01-21**: ZIP archive for multi-file CSV download (05-04)
+- **2026-01-21**: Job store reset fixture with autouse=True for test isolation (05-05)
+- **2026-01-21**: CLI uses ExtractionService.process_files() with progress_callback (05-05)
+- **2026-01-21**: Service layer shared by CLI and API for code reuse (05-05)
 
 ## Blockers
 
@@ -73,21 +76,25 @@ None
 
 Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska client document processing services.
 
-Phase 5 (FastAPI Backend) API endpoints complete:
+Phase 5 (FastAPI Backend) COMPLETE:
 - POST /api/extract accepts file uploads, returns job_id
 - GET /api/extract/{job_id} returns job status with progress
 - GET /api/extract/{job_id}/progress streams SSE progress updates
 - GET /api/graph/{job_id} returns graph JSON
 - GET /api/download/{job_id} downloads HTML visualization
 - GET /api/download/{job_id}/csv downloads CSV ZIP archive
+- 23 API tests with 83% coverage
+- CLI refactored to use ExtractionService
 
 Full extraction flow verified:
 - Upload files -> background processing -> poll/SSE for progress -> get graph JSON -> download files
 
-Next: 05-05 - API Tests (comprehensive test coverage)
+Total tests: 169 passing
+
+Next: Phase 06 - React Frontend
 
 ## Session Continuity
 
-Last session: 2026-01-21T23:01:59Z
-Stopped at: Completed 05-04-PLAN.md
+Last session: 2026-01-21T23:07:22Z
+Stopped at: Completed 05-05-PLAN.md (Phase 05 complete)
 Resume file: None
