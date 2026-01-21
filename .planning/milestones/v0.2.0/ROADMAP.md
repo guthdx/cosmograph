@@ -86,29 +86,37 @@ Plans:
 
 ---
 
-### Phase 4: LLM Extractor
+### Phase 4: LLM Extractor ✓
 
-**Status**: Planned
+**Status**: Complete (2026-01-21)
 **Goal**: Claude-powered entity and relationship extraction
 
-**Plans:** 3 plans
+**Plans:** 3/3 complete
 
 Plans:
-- [ ] 04-01-PLAN.md — Create LlmExtractor with structured outputs and chunking
-- [ ] 04-02-PLAN.md — Add token estimation and approval gate
-- [ ] 04-03-PLAN.md — CLI integration and mocked tests
+- [x] 04-01-PLAN.md — Create LlmExtractor with structured outputs and chunking
+- [x] 04-02-PLAN.md — Add token estimation and approval gate
+- [x] 04-03-PLAN.md — CLI integration and mocked tests
+
+**Results:**
+- LlmExtractor class (492 lines) with Pydantic structured outputs
+- Token estimation via official count_tokens API (free, accurate)
+- Operator approval gate with Rich table display
+- Document hash logging for audit (never content)
+- CLI `-e llm` with `--no-confirm` flag
+- 34 mocked tests, 128 total tests passing
 
 **Success Criteria**:
-- [ ] LLM extraction produces valid graph
-- [ ] Token estimate shown before processing
-- [ ] Confirmation required before API call
-- [ ] Tests pass without real API calls
+- [x] LLM extraction produces valid graph
+- [x] Token estimate shown before processing
+- [x] Confirmation required before API call
+- [x] Tests pass without real API calls
 
 **Requirements Satisfied**: FR-2 (LLM-Powered Extraction)
 
 **Data Sovereignty Compliance**:
-- [ ] Explicit operator confirmation before any API call
-- [ ] Log extraction events (document hash, not content)
+- [x] Explicit operator confirmation before any API call
+- [x] Log extraction events (document hash, not content)
 
 ---
 

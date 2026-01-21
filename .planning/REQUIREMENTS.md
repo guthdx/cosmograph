@@ -30,9 +30,10 @@
 
 ---
 
-### FR-2: LLM-Powered Extraction
+### FR-2: LLM-Powered Extraction ✓ Complete
 
 **Priority**: High (differentiator feature)
+**Status**: Complete (Phase 4, 2026-01-21)
 
 **User Story**: As an operator, I can use Claude to extract entities and relationships that pattern matching misses.
 
