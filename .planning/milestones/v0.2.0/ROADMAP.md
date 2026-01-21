@@ -122,30 +122,33 @@ Plans:
 
 ### Phase 5: FastAPI Backend
 
+**Status**: Planned (2026-01-21)
 **Goal**: HTTP API for web interface
 
-**Rationale**: Web UI needs endpoints to call. Keep CLI working.
+**Plans:** 5 plans
 
-**Tasks**:
-1. Create `src/cosmograph/api/main.py` with FastAPI app
-2. Implement file upload endpoint `POST /api/extract`
-3. Implement extraction options (method, patterns file)
-4. Return graph JSON and download URLs
-5. Add progress endpoint (polling or SSE)
-6. Implement error responses with helpful messages
-7. Add CORS for local development
-8. Add health check endpoint `GET /health`
-9. Keep CLI working (refactor to share code, not duplicate)
-10. Add API tests
+Plans:
+- [ ] 05-01-PLAN.md — Add FastAPI dependencies and create ExtractionService
+- [ ] 05-02-PLAN.md — Create FastAPI app skeleton with health endpoint
+- [ ] 05-03-PLAN.md — Implement extraction endpoints (upload, job status)
+- [ ] 05-04-PLAN.md — Implement graph retrieval, download, and SSE progress
+- [ ] 05-05-PLAN.md — Add API tests and refactor CLI to use service layer
 
 **Endpoints**:
 ```
 POST /api/extract         - Upload files, start extraction
 GET  /api/extract/{id}    - Get extraction status/results
+GET  /api/extract/{id}/progress - SSE progress stream
 GET  /api/graph/{id}      - Get graph JSON
 GET  /api/download/{id}   - Download HTML visualization
 GET  /health              - Health check
 ```
+
+**Wave Structure**:
+- Wave 1: Plans 01, 02 (parallel - deps + service, app skeleton)
+- Wave 2: Plan 03 (extraction routes)
+- Wave 3: Plan 04 (graph routes + SSE)
+- Wave 4: Plan 05 (tests + CLI refactor)
 
 **Success Criteria**:
 - [ ] Can upload file via curl and get graph JSON
@@ -269,3 +272,4 @@ After Phase 7, verify:
 *Phase 1 planned: 2026-01-21*
 *Phase 3 planned: 2026-01-21*
 *Phase 4 planned: 2026-01-21*
+*Phase 5 planned: 2026-01-21*
