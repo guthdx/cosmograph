@@ -66,18 +66,19 @@ Plans:
 
 ### Phase 3: Pattern Configuration
 
+**Status**: Planning complete (2026-01-21)
 **Goal**: Custom extraction rules without code changes
 
-**Rationale**: Different document types need different patterns. Code changes for each client is unsustainable.
+**Plans:** 3 plans
 
-**Tasks**:
-1. Define YAML schema for pattern configuration
-2. Create `PatternConfig` loader with validation
-3. Modify `GenericExtractor` to accept dynamic patterns
-4. Create default patterns.yaml with current hardcoded patterns
-5. Add CLI option `--patterns path/to/patterns.yaml`
-6. Document pattern authoring in CLAUDE.md
-7. Add tests for pattern loading and validation
+Plans:
+- [ ] 03-01-PLAN.md — Create PatternConfig Pydantic models and default patterns.yaml
+- [ ] 03-02-PLAN.md — Update GenericExtractor and CLI --patterns option
+- [ ] 03-03-PLAN.md — Add tests for pattern configuration
+
+**Wave Structure:**
+- Wave 1: 03-01 (foundation - PatternConfig model)
+- Wave 2: 03-02, 03-03 (parallel - integration and tests)
 
 **Success Criteria**:
 - [ ] Custom patterns.yaml loads at runtime
@@ -269,3 +270,4 @@ After Phase 7, verify:
 
 *Roadmap created: 2026-01-21*
 *Phase 1 planned: 2026-01-21*
+*Phase 3 planned: 2026-01-21*
