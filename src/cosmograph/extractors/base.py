@@ -2,7 +2,6 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional
 
 from ..models import Graph
 
@@ -10,7 +9,7 @@ from ..models import Graph
 class BaseExtractor(ABC):
     """Base class for document extractors."""
 
-    def __init__(self, graph: Optional[Graph] = None):
+    def __init__(self, graph: Graph | None = None):
         self.graph = graph or Graph()
 
     @abstractmethod

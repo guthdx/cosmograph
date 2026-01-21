@@ -2,7 +2,6 @@
 
 import re
 from pathlib import Path
-from typing import Optional
 
 from ..config import PatternConfig
 from ..models import Graph
@@ -22,9 +21,9 @@ class GenericExtractor(BaseExtractor):
 
     def __init__(
         self,
-        graph: Optional[Graph] = None,
-        patterns: Optional[dict[str, str]] = None,
-        config: Optional[PatternConfig] = None,
+        graph: Graph | None = None,
+        patterns: dict[str, str] | None = None,
+        config: PatternConfig | None = None,
         min_occurrences: int = 2,
     ):
         super().__init__(graph)
@@ -32,14 +31,10 @@ class GenericExtractor(BaseExtractor):
         # Handle configuration sources in priority order
         if config is not None:
             # Build patterns dict from PatternConfig
-            pattern_strings = {
-                ep.name: ep.pattern for ep in config.entity_patterns
-            }
+            pattern_strings = {ep.name: ep.pattern for ep in config.entity_patterns}
             self.min_occurrences = config.min_occurrences
             # Store metadata for category and min_length lookup
-            self._pattern_metadata = {
-                ep.name: ep for ep in config.entity_patterns
-            }
+            self._pattern_metadata = {ep.name: ep for ep in config.entity_patterns}
         elif patterns is not None:
             pattern_strings = patterns
             self.min_occurrences = min_occurrences
@@ -51,8 +46,7 @@ class GenericExtractor(BaseExtractor):
 
         # Compile patterns once at init
         self._compiled_patterns = {
-            name: re.compile(pattern)
-            for name, pattern in pattern_strings.items()
+            name: re.compile(pattern) for name, pattern in pattern_strings.items()
         }
 
     def supports(self, filepath: Path) -> bool:

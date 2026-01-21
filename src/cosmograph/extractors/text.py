@@ -15,9 +15,7 @@ class TextExtractor(BaseExtractor):
     _DEFINITION_PATTERN = re.compile(
         r'"([A-Za-z\s]+)"\s+(?:means|shall mean|is defined as)\s+([^.]+)'
     )
-    _REFERENCE_PATTERN = re.compile(
-        r"(?:see|refer to|pursuant to)\s+([A-Za-z\s\d\-]+)"
-    )
+    _REFERENCE_PATTERN = re.compile(r"(?:see|refer to|pursuant to)\s+([A-Za-z\s\d\-]+)")
 
     def supports(self, filepath: Path) -> bool:
         return filepath.suffix.lower() in {".txt", ".md", ".text"}

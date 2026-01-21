@@ -148,6 +148,7 @@ def _make_retry_decorator() -> Any:
         # Identity decorator when tenacity not installed
         def identity(func: Any) -> Any:
             return func
+
         return identity
 
 
@@ -221,9 +222,7 @@ class LlmExtractor(BaseExtractor):
         output_cost = (output_tokens / 1_000_000) * prices["output"]
         return input_cost + output_cost
 
-    def estimate_tokens(
-        self, text: str, chunks: list[str] | None = None
-    ) -> dict[str, Any]:
+    def estimate_tokens(self, text: str, chunks: list[str] | None = None) -> dict[str, Any]:
         """Count tokens and estimate cost before extraction.
 
         Uses the official token counting API (free call) for accurate counts.
@@ -260,9 +259,7 @@ class LlmExtractor(BaseExtractor):
 
         # Conservative output estimate: extraction typically <25% of input, capped at 4096/chunk
         max_output_per_chunk = 4096
-        estimated_output = min(
-            total_input_tokens // 4, max_output_per_chunk * len(chunks)
-        )
+        estimated_output = min(total_input_tokens // 4, max_output_per_chunk * len(chunks))
 
         # Calculate estimated cost
         estimated_cost = self._calculate_cost(total_input_tokens, estimated_output)
@@ -322,8 +319,7 @@ class LlmExtractor(BaseExtractor):
         if approved:
             # Audit log: document hash and token count (never content)
             logger.info(
-                f"LLM extraction approved for doc {doc_hash}, "
-                f"{estimate['input_tokens']} tokens"
+                f"LLM extraction approved for doc {doc_hash}, {estimate['input_tokens']} tokens"
             )
 
         return approved
@@ -357,9 +353,7 @@ class LlmExtractor(BaseExtractor):
         # Data sovereignty: get approval before any API calls
         estimate = self.estimate_tokens(text, chunks)
         if not self._approval_gate(text, estimate):
-            raise OperatorDeclinedError(
-                f"Operator declined LLM extraction for {filepath.name}"
-            )
+            raise OperatorDeclinedError(f"Operator declined LLM extraction for {filepath.name}")
 
         # Extract from each chunk and merge results
         for i, chunk in enumerate(chunks, 1):
