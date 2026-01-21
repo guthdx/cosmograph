@@ -4,9 +4,9 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 05-fastapi-backend (5 of 7)
-**Plan**: 02 of 5
+**Plan**: 03 of 5
 **Status**: In progress
-**Last activity**: 2026-01-21 - Completed 05-02-PLAN.md (FastAPI App Skeleton)
+**Last activity**: 2026-01-21 - Completed 05-03-PLAN.md (File Upload & Extraction Endpoints)
 
 Progress: [████░░░░░░] 4/7 phases complete
 
@@ -18,7 +18,7 @@ Progress: [████░░░░░░] 4/7 phases complete
 | 02 | complete | 2/2 |
 | 03 | complete | 3/3 |
 | 04 | complete | 3/3 |
-| 05 | in progress | 2/5 |
+| 05 | in progress | 3/5 |
 | 06 | pending | 0/? |
 | 07 | pending | 0/? |
 
@@ -58,6 +58,9 @@ Progress: [████░░░░░░] 4/7 phases complete
 - **2026-01-21**: 8-char UUID for job IDs (05-02)
 - **2026-01-21**: CORS configured for localhost:3000, localhost:5173, cosmograph.localhost (05-02)
 - **2026-01-21**: Root path redirects to /docs for developer convenience (05-02)
+- **2026-01-21**: LLM extraction requires llm_confirmed=true parameter in API (05-03)
+- **2026-01-21**: Stream uploads to disk with shutil.copyfileobj (05-03)
+- **2026-01-21**: Store output_dir in Job for download endpoint access (05-03)
 
 ## Blockers
 
@@ -70,19 +73,19 @@ Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska clien
 Phase 5 (FastAPI Backend) in progress:
 - Plan 1: ExtractionService for framework-agnostic business logic
 - Plan 2: FastAPI app skeleton with health endpoint, job store, schemas
+- Plan 3: File upload & extraction endpoints
 
-API foundation complete:
-- FastAPI app starts with uvicorn
-- Health endpoint at /health returns status and version
-- OpenAPI docs at /docs
-- CORS configured for local development
-- Pydantic schemas for all API contracts
-- In-memory JobStore for extraction job tracking
+Extraction API complete:
+- POST /api/extract accepts file uploads, returns job_id
+- GET /api/extract/{job_id} returns job status with progress
+- Background processing with progress_callback updates
+- LLM confirmation gate enforces data sovereignty approval
+- Stream-to-disk uploads prevent memory exhaustion
 
-Next: 05-03 - File Upload & Extraction Endpoints
+Next: 05-04 - Graph & Download Endpoints
 
 ## Session Continuity
 
-Last session: 2026-01-21T22:52:28Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-01-21T22:56:55Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None
