@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
+from ..config import PatternConfig
 from ..models import Graph
 from .base import BaseExtractor
 
@@ -23,15 +24,35 @@ class GenericExtractor(BaseExtractor):
         self,
         graph: Optional[Graph] = None,
         patterns: Optional[dict[str, str]] = None,
+        config: Optional[PatternConfig] = None,
         min_occurrences: int = 2,
     ):
         super().__init__(graph)
-        pattern_strings = patterns or self.DEFAULT_PATTERNS
-        self.min_occurrences = min_occurrences
+
+        # Handle configuration sources in priority order
+        if config is not None:
+            # Build patterns dict from PatternConfig
+            pattern_strings = {
+                ep.name: ep.pattern for ep in config.entity_patterns
+            }
+            self.min_occurrences = config.min_occurrences
+            # Store metadata for category and min_length lookup
+            self._pattern_metadata = {
+                ep.name: ep for ep in config.entity_patterns
+            }
+        elif patterns is not None:
+            pattern_strings = patterns
+            self.min_occurrences = min_occurrences
+            self._pattern_metadata = {}
+        else:
+            pattern_strings = self.DEFAULT_PATTERNS
+            self.min_occurrences = min_occurrences
+            self._pattern_metadata = {}
+
         # Compile patterns once at init
         self._compiled_patterns = {
-            category: re.compile(pattern)
-            for category, pattern in pattern_strings.items()
+            name: re.compile(pattern)
+            for name, pattern in pattern_strings.items()
         }
 
     def supports(self, filepath: Path) -> bool:
@@ -50,15 +71,29 @@ class GenericExtractor(BaseExtractor):
         # Count occurrences for each pattern
         entity_counts: dict[str, dict[str, int]] = {}
 
-        for category, compiled_pattern in self._compiled_patterns.items():
-            entity_counts[category] = {}
+        for pattern_name, compiled_pattern in self._compiled_patterns.items():
+            # Get min_length from metadata if available, else default to 2
+            if pattern_name in self._pattern_metadata:
+                min_length = self._pattern_metadata[pattern_name].min_length
+            else:
+                min_length = 2
+
+            entity_counts[pattern_name] = {}
             for match in compiled_pattern.finditer(text):
                 entity = match.group(1).strip()
-                if len(entity) > 2:
-                    entity_counts[category][entity] = entity_counts[category].get(entity, 0) + 1
+                if len(entity) >= min_length:
+                    entity_counts[pattern_name][entity] = (
+                        entity_counts[pattern_name].get(entity, 0) + 1
+                    )
 
         # Add entities that meet minimum occurrence threshold
-        for category, entities in entity_counts.items():
+        for pattern_name, entities in entity_counts.items():
+            # Get category from metadata if available, else use pattern name
+            if pattern_name in self._pattern_metadata:
+                category = self._pattern_metadata[pattern_name].category
+            else:
+                category = pattern_name
+
             for entity, count in entities.items():
                 if count >= self.min_occurrences:
                     entity_id = self.graph.add_node(
