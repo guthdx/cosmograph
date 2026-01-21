@@ -66,10 +66,18 @@ def load_patterns(filepath: Path) -> PatternConfig:
 
     Raises:
         FileNotFoundError: If the file doesn't exist.
-        ValueError: If the YAML is invalid or patterns fail validation.
+        ValueError: If the YAML is invalid or empty.
+        ValidationError: If patterns fail Pydantic validation.
     """
     yaml_content = filepath.read_text(encoding="utf-8")
-    raw_data: Any = yaml.safe_load(yaml_content)
+    try:
+        raw_data: Any = yaml.safe_load(yaml_content)
+    except yaml.YAMLError as e:
+        raise ValueError(f"Invalid YAML syntax: {e}") from e
+
+    if raw_data is None:
+        raise ValueError("Empty pattern configuration file")
+
     return PatternConfig.model_validate(raw_data)
 
 
