@@ -60,7 +60,7 @@ class HTMLGenerator:
         return output_path
 
     def _generate_html(
-        self, title: str, nodes_json: str, edges_json: str, colors_json: str, stats: dict
+        self, title: str, nodes_json: str, edges_json: str, colors_json: str, stats: dict[str, int]
     ) -> str:
         """Render HTML visualization using Jinja2 template."""
         template = self.env.get_template("graph.html.j2")
