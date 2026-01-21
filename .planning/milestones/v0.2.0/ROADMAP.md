@@ -64,27 +64,23 @@ Plans:
 
 ---
 
-### Phase 3: Pattern Configuration
+### Phase 3: Pattern Configuration ✓
 
-**Status**: Planning complete (2026-01-21)
+**Status**: Complete (2026-01-21)
 **Goal**: Custom extraction rules without code changes
 
-**Plans:** 3 plans
+**Plans:** 3/3 complete
 
 Plans:
-- [ ] 03-01-PLAN.md — Create PatternConfig Pydantic models and default patterns.yaml
-- [ ] 03-02-PLAN.md — Update GenericExtractor and CLI --patterns option
-- [ ] 03-03-PLAN.md — Add tests for pattern configuration
+- [x] 03-01-PLAN.md — Create PatternConfig Pydantic models and default patterns.yaml
+- [x] 03-02-PLAN.md — Update GenericExtractor and CLI --patterns option
+- [x] 03-03-PLAN.md — Add tests for pattern configuration
 
-**Wave Structure:**
-- Wave 1: 03-01 (foundation - PatternConfig model)
-- Wave 2: 03-02, 03-03 (parallel - integration and tests)
-
-**Success Criteria**:
-- [ ] Custom patterns.yaml loads at runtime
-- [ ] Invalid YAML produces helpful error message
-- [ ] Default patterns produce same results as current code
-- [ ] Pattern documentation complete
+**Results:**
+- PatternConfig Pydantic models with regex validation (exactly 1 capture group)
+- CLI `--patterns` option for custom YAML files
+- 21 pattern tests, 94 total tests passing
+- 100% coverage on config module
 
 **Requirements Satisfied**: FR-3 (Custom Pattern Configuration)
 
