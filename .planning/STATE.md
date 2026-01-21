@@ -4,9 +4,9 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 04-llm-extractor (4 of 7)
-**Plan**: 01 of 3
+**Plan**: 02 of 3
 **Status**: In progress
-**Last activity**: 2026-01-21 - Completed 04-01-PLAN.md
+**Last activity**: 2026-01-21 - Completed 04-02-PLAN.md
 
 Progress: [███░░░░░░░] 3/7 phases complete
 
@@ -17,7 +17,7 @@ Progress: [███░░░░░░░] 3/7 phases complete
 | 01 | complete | 5/5 |
 | 02 | complete | 2/2 |
 | 03 | complete | 3/3 |
-| 04 | in progress | 1/3 |
+| 04 | in progress | 2/3 |
 | 05 | pending | 0/? |
 | 06 | pending | 0/? |
 | 07 | pending | 0/? |
@@ -44,6 +44,10 @@ Progress: [███░░░░░░░] 3/7 phases complete
 - **2026-01-21**: 400K char chunks with 2K overlap for document processing (04-01)
 - **2026-01-21**: Dynamic retry decorator application to avoid mypy no-redef errors (04-01)
 - **2026-01-21**: Export HAS_ANTHROPIC flag for runtime LLM feature detection (04-01)
+- **2026-01-21**: Official token counting API over character-based estimation (04-02)
+- **2026-01-21**: Interactive mode defaults to True for data sovereignty compliance (04-02)
+- **2026-01-21**: OperatorDeclinedError as explicit exception for declined extractions (04-02)
+- **2026-01-21**: 16-char document hash for audit trail (never log content) (04-02)
 
 ## Blockers
 
@@ -55,6 +59,6 @@ Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska clien
 
 ## Session Continuity
 
-Last session: 2026-01-21T22:12:34Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-01-21T22:16:12Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
