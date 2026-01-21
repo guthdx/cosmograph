@@ -4,9 +4,9 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 05-fastapi-backend (5 of 7)
-**Plan**: 01 of 4
+**Plan**: 02 of 5
 **Status**: In progress
-**Last activity**: 2026-01-21 - Completed 05-01-PLAN.md (Service Layer + API Dependencies)
+**Last activity**: 2026-01-21 - Completed 05-02-PLAN.md (FastAPI App Skeleton)
 
 Progress: [████░░░░░░] 4/7 phases complete
 
@@ -18,7 +18,7 @@ Progress: [████░░░░░░] 4/7 phases complete
 | 02 | complete | 2/2 |
 | 03 | complete | 3/3 |
 | 04 | complete | 3/3 |
-| 05 | in progress | 1/4 |
+| 05 | in progress | 2/5 |
 | 06 | pending | 0/? |
 | 07 | pending | 0/? |
 
@@ -54,6 +54,10 @@ Progress: [████░░░░░░] 4/7 phases complete
 - **2026-01-21**: Service layer is framework-agnostic (no typer/fastapi imports) (05-01)
 - **2026-01-21**: progress_callback(current, total) signature for progress reporting (05-01)
 - **2026-01-21**: generate_outputs returns dict[str, Path] for flexible output access (05-01)
+- **2026-01-21**: In-memory JobStore with no persistence per REQUIREMENTS.md (05-02)
+- **2026-01-21**: 8-char UUID for job IDs (05-02)
+- **2026-01-21**: CORS configured for localhost:3000, localhost:5173, cosmograph.localhost (05-02)
+- **2026-01-21**: Root path redirects to /docs for developer convenience (05-02)
 
 ## Blockers
 
@@ -63,16 +67,22 @@ None
 
 Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska client document processing services.
 
-Phase 5 (FastAPI Backend) started. First plan complete:
-- ExtractionService class for framework-agnostic business logic
-- FastAPI dependencies in [api] optional group
-- [all] convenience group for full dev setup
-- 18 service tests passing
+Phase 5 (FastAPI Backend) in progress:
+- Plan 1: ExtractionService for framework-agnostic business logic
+- Plan 2: FastAPI app skeleton with health endpoint, job store, schemas
 
-Next: 05-02 - API Module Structure & Schemas
+API foundation complete:
+- FastAPI app starts with uvicorn
+- Health endpoint at /health returns status and version
+- OpenAPI docs at /docs
+- CORS configured for local development
+- Pydantic schemas for all API contracts
+- In-memory JobStore for extraction job tracking
+
+Next: 05-03 - File Upload & Extraction Endpoints
 
 ## Session Continuity
 
-Last session: 2026-01-21T22:50:50Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-01-21T22:52:28Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
