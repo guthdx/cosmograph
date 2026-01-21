@@ -5,15 +5,15 @@ import json
 import logging
 import shutil
 import tempfile
+from collections.abc import AsyncGenerator
 from pathlib import Path
-from typing import AsyncGenerator
 
 from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
 from sse_starlette.sse import EventSourceResponse
 
-from ..deps import Job, JobStore, get_job_store
-from ..schemas import JobResponse, JobStatus
 from ...services.extraction import ExtractionService
+from ..deps import Job, get_job_store
+from ..schemas import JobResponse, JobStatus
 
 logger = logging.getLogger(__name__)
 

@@ -2,12 +2,13 @@
 
 import io
 import time
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
 
-from cosmograph.api.deps import JobStore, get_job_store, job_store
+from cosmograph.api.deps import Job, job_store
 from cosmograph.api.main import app
 from cosmograph.api.schemas import JobStatus
 
@@ -227,9 +228,6 @@ class TestGraphEndpoint:
         # Immediately try to get graph (job likely still pending/processing)
         # We need to mock to ensure the job stays in pending state
         with patch.object(job_store, "get_job") as mock_get:
-            from cosmograph.api.deps import Job
-            from datetime import datetime, UTC
-
             mock_job = Job(
                 id=job_id,
                 status=JobStatus.pending,
@@ -288,9 +286,6 @@ class TestDownloadEndpoint:
 
         # Mock pending state
         with patch.object(job_store, "get_job") as mock_get:
-            from cosmograph.api.deps import Job
-            from datetime import datetime, UTC
-
             mock_job = Job(
                 id=job_id,
                 status=JobStatus.pending,
