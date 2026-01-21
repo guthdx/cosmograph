@@ -9,7 +9,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from . import __version__
-from .extractors import GenericExtractor, LegalDocumentExtractor, TextExtractor
+from .extractors import GenericExtractor, LegalDocumentExtractor, PdfExtractor, TextExtractor
 from .generators import CSVGenerator, HTMLGenerator
 from .models import Graph
 
@@ -45,7 +45,7 @@ def generate(
     ),
     title: str = typer.Option("Knowledge Graph", "-t", "--title", help="Title for the visualization"),
     extractor: str = typer.Option(
-        "auto", "-e", "--extractor", help="Extractor type: auto, legal, text, generic"
+        "auto", "-e", "--extractor", help="Extractor type: auto, legal, text, generic, pdf"
     ),
     pattern: str = typer.Option("*.txt", "-p", "--pattern", help="File pattern when input is directory"),
     html_only: bool = typer.Option(False, "--html-only", help="Only generate HTML, skip CSV"),
@@ -197,6 +197,8 @@ def _get_extractor(extractor_type: str, graph: Graph):
         return TextExtractor(graph)
     elif extractor_type == "generic":
         return GenericExtractor(graph)
+    elif extractor_type == "pdf":
+        return PdfExtractor(graph)
     else:  # auto
         return LegalDocumentExtractor(graph)  # Default to legal for now
 
