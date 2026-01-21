@@ -3,10 +3,10 @@
 ## Current Position
 
 **Milestone**: v0.2.0 - Web Foundation
-**Phase**: 02-pdf-extractor (2 of 7)
-**Plan**: 02 of 2
-**Status**: Phase complete
-**Last activity**: 2026-01-21 - Completed 02-02-PLAN.md
+**Phase**: 03-pattern-configuration (3 of 7)
+**Plan**: 01 of ?
+**Status**: In progress
+**Last activity**: 2026-01-21 - Completed 03-01-PLAN.md
 
 Progress: [██░░░░░░░░] 2/7 phases complete
 
@@ -16,7 +16,7 @@ Progress: [██░░░░░░░░] 2/7 phases complete
 |-------|--------|-------|
 | 01 | ✓ complete | 5/5 |
 | 02 | ✓ complete | 2/2 |
-| 03 | pending | 0/? |
+| 03 | in progress | 1/? |
 | 04 | pending | 0/? |
 | 05 | pending | 0/? |
 | 06 | pending | 0/? |
@@ -35,6 +35,8 @@ Progress: [██░░░░░░░░] 2/7 phases complete
 - **2026-01-21**: Scanned PDF detection via text length + image presence heuristics (02-01)
 - **2026-01-21**: Users must specify -e pdf explicitly; auto extractor remains LegalDocumentExtractor (02-02)
 - **2026-01-21**: Use PyMuPDF for test fixtures rather than adding reportlab dependency (02-02)
+- **2026-01-21**: Exactly one capture group required in patterns - validates at load time (03-01)
+- **2026-01-21**: types-pyyaml added to dev dependencies for mypy compatibility (03-01)
 
 ## Blockers
 
@@ -46,6 +48,6 @@ Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska clien
 
 ## Session Continuity
 
-Last session: 2026-01-21T19:32:28Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-01-21T21:43:20Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
