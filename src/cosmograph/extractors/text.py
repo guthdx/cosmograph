@@ -10,12 +10,14 @@ from .base import BaseExtractor
 class TextExtractor(BaseExtractor):
     """Extract entities from plain text files."""
 
-    # Common patterns for entity extraction
-    PATTERNS = {
-        "header": r"^#{1,6}\s+(.+)$",  # Markdown headers
-        "definition": r'"([A-Za-z\s]+)"\s+(?:means|shall mean|is defined as)\s+([^.]+)',
-        "reference": r"(?:see|refer to|pursuant to)\s+([A-Za-z\s\d\-]+)",
-    }
+    # Pre-compiled regex patterns
+    _HEADER_PATTERN = re.compile(r"^#{1,6}\s+(.+)$", re.MULTILINE)
+    _DEFINITION_PATTERN = re.compile(
+        r'"([A-Za-z\s]+)"\s+(?:means|shall mean|is defined as)\s+([^.]+)'
+    )
+    _REFERENCE_PATTERN = re.compile(
+        r"(?:see|refer to|pursuant to)\s+([A-Za-z\s\d\-]+)"
+    )
 
     def supports(self, filepath: Path) -> bool:
         return filepath.suffix.lower() in {".txt", ".md", ".text"}
@@ -40,7 +42,7 @@ class TextExtractor(BaseExtractor):
 
     def _extract_headers(self, text: str, doc_id: str, source: str) -> None:
         """Extract markdown-style headers."""
-        for match in re.finditer(self.PATTERNS["header"], text, re.MULTILINE):
+        for match in self._HEADER_PATTERN.finditer(text):
             header_text = match.group(1).strip()
             if len(header_text) > 3:
                 header_id = self.graph.add_node(
@@ -50,7 +52,7 @@ class TextExtractor(BaseExtractor):
 
     def _extract_definitions(self, text: str, doc_id: str, source: str) -> None:
         """Extract term definitions."""
-        for match in re.finditer(self.PATTERNS["definition"], text):
+        for match in self._DEFINITION_PATTERN.finditer(text):
             term = match.group(1).strip().title()
             definition = match.group(2).strip()[:100]
             if 2 < len(term) < 40:

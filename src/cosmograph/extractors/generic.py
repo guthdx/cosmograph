@@ -26,8 +26,13 @@ class GenericExtractor(BaseExtractor):
         min_occurrences: int = 2,
     ):
         super().__init__(graph)
-        self.patterns = patterns or self.DEFAULT_PATTERNS
+        pattern_strings = patterns or self.DEFAULT_PATTERNS
         self.min_occurrences = min_occurrences
+        # Compile patterns once at init
+        self._compiled_patterns = {
+            category: re.compile(pattern)
+            for category, pattern in pattern_strings.items()
+        }
 
     def supports(self, filepath: Path) -> bool:
         return filepath.suffix.lower() in {".txt", ".md", ".text"}
@@ -45,9 +50,9 @@ class GenericExtractor(BaseExtractor):
         # Count occurrences for each pattern
         entity_counts: dict[str, dict[str, int]] = {}
 
-        for category, pattern in self.patterns.items():
+        for category, compiled_pattern in self._compiled_patterns.items():
             entity_counts[category] = {}
-            for match in re.finditer(pattern, text):
+            for match in compiled_pattern.finditer(text):
                 entity = match.group(1).strip()
                 if len(entity) > 2:
                     entity_counts[category][entity] = entity_counts[category].get(entity, 0) + 1
