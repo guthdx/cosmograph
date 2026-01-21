@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel
+from rich.console import Console
+from rich.table import Table
 
 from ..models import Graph
 from .base import BaseExtractor
@@ -87,6 +90,16 @@ class ExtractionResult(BaseModel):
     relationships: list[ExtractedRelationship]
 
 
+class OperatorDeclinedError(Exception):
+    """Raised when operator declines LLM extraction.
+
+    This is not an error condition - it's the expected outcome when an operator
+    reviews the cost estimate and decides not to proceed with extraction.
+    """
+
+    pass
+
+
 # System prompt for extraction
 SYSTEM_PROMPT = """\
 You are a knowledge graph extraction expert. \
@@ -156,12 +169,15 @@ class LlmExtractor(BaseExtractor):
         self,
         graph: Graph | None = None,
         model: str = "claude-sonnet-4-5",
+        interactive: bool = True,
     ) -> None:
         """Initialize the LLM extractor.
 
         Args:
             graph: Optional existing graph to add to
             model: Claude model to use for extraction
+            interactive: If True, prompt for approval before API calls.
+                         If False, skip approval (for batch/automated processing).
 
         Raises:
             ImportError: If anthropic package not installed
@@ -169,6 +185,7 @@ class LlmExtractor(BaseExtractor):
         """
         super().__init__(graph)
         self.model = model
+        self.interactive = interactive
         self.client: Anthropic | None = None
 
         if not HAS_ANTHROPIC:
@@ -258,6 +275,59 @@ class LlmExtractor(BaseExtractor):
             "chunk_count": len(chunks),
         }
 
+    def _approval_gate(self, text: str, estimate: dict[str, Any]) -> bool:
+        """Display extraction details and get operator approval.
+
+        For data sovereignty compliance, operators must see estimated costs
+        and explicitly approve before document content is sent to Claude API.
+
+        Args:
+            text: Full document text (used for hash generation)
+            estimate: Token estimate dict from estimate_tokens()
+
+        Returns:
+            True if approved, False if declined.
+            For non-interactive mode, always returns True.
+        """
+        if not self.interactive:
+            return True
+
+        console = Console()
+
+        # Generate document hash for audit (not content)
+        doc_hash = hashlib.sha256(text.encode()).hexdigest()[:16]
+
+        # Display cost estimate table
+        table = Table(title="LLM Extraction Request")
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", justify="right")
+
+        table.add_row("Document Hash", doc_hash)
+        table.add_row("Input Tokens", f"{estimate['input_tokens']:,}")
+        table.add_row("Est. Output Tokens", f"{estimate['estimated_output_tokens']:,}")
+        table.add_row("Est. Cost (USD)", f"${estimate['estimated_cost_usd']:.4f}")
+        table.add_row("Model", estimate["model"])
+        if estimate["chunk_count"] > 1:
+            table.add_row("Chunks", str(estimate["chunk_count"]))
+
+        console.print()
+        console.print(table)
+        console.print(
+            "\n[yellow]This will send document content to Anthropic's Claude API.[/yellow]"
+        )
+
+        response = console.input("\n[bold]Proceed with extraction? [y/N]: [/bold]")
+        approved = response.lower() in ("y", "yes")
+
+        if approved:
+            # Audit log: document hash and token count (never content)
+            logger.info(
+                f"LLM extraction approved for doc {doc_hash}, "
+                f"{estimate['input_tokens']} tokens"
+            )
+
+        return approved
+
     def supports(self, filepath: Path) -> bool:
         """Check if this extractor supports the given file type.
 
@@ -273,6 +343,9 @@ class LlmExtractor(BaseExtractor):
 
         Returns:
             Graph with extracted nodes and edges
+
+        Raises:
+            OperatorDeclinedError: If operator declines extraction in interactive mode
         """
         text = self.read_text(filepath)
         source_file = filepath.name
@@ -280,6 +353,13 @@ class LlmExtractor(BaseExtractor):
         # Chunk document if necessary
         chunks = self._chunk_document(text)
         logger.info(f"Processing {filepath.name} in {len(chunks)} chunk(s)")
+
+        # Data sovereignty: get approval before any API calls
+        estimate = self.estimate_tokens(text, chunks)
+        if not self._approval_gate(text, estimate):
+            raise OperatorDeclinedError(
+                f"Operator declined LLM extraction for {filepath.name}"
+            )
 
         # Extract from each chunk and merge results
         for i, chunk in enumerate(chunks, 1):
