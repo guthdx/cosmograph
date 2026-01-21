@@ -1,10 +1,10 @@
 """Job store and FastAPI dependencies for Cosmograph API."""
 
+import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-import uuid
 
 from .schemas import JobStatus
 
@@ -38,7 +38,7 @@ class JobStore:
         job = Job(
             id=job_id,
             status=JobStatus.pending,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
             total=total,
         )
         self._jobs[job_id] = job
