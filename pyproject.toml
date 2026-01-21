@@ -46,6 +46,16 @@ llm = [
     "tenacity>=8.2.0",
     "python-dotenv>=1.0.0",
 ]
+api = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "python-multipart>=0.0.9",
+    "sse-starlette>=2.0.0",
+    "httpx>=0.27.0",
+]
+all = [
+    "cosmograph[dev,pdf,llm,api]",
+]
 
 [project.scripts]
 cosmograph = "cosmograph.cli:app"
