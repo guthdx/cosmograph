@@ -14,8 +14,8 @@ Progress: [██░░░░░░░░] 2/7 phases complete
 
 | Phase | Status | Plans |
 |-------|--------|-------|
-| 01 | complete | 5/5 |
-| 02 | complete | 2/2 |
+| 01 | ✓ complete | 5/5 |
+| 02 | ✓ complete | 2/2 |
 | 03 | pending | 0/? |
 | 04 | pending | 0/? |
 | 05 | pending | 0/? |

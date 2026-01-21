@@ -43,26 +43,22 @@ Plans:
 
 ---
 
-### Phase 2: PDF Extractor
+### Phase 2: PDF Extractor ✓
 
+**Status**: Complete (2026-01-21)
 **Goal**: Process PDF documents without pre-conversion
 
-**Rationale**: Most legal documents come as PDFs. Manual conversion is a bottleneck.
+**Plans:** 2/2 complete
 
-**Tasks**:
-1. Create `PdfExtractor` class inheriting `BaseExtractor`
-2. Implement `supports()` for .pdf files
-3. Implement `extract()` using pymupdf for text extraction
-4. Handle multi-page documents
-5. Graceful error for encrypted/scanned PDFs
-6. Add CLI option `-e pdf` or auto-detect by extension
-7. Add tests with sample PDF documents
+Plans:
+- [x] 02-01-PLAN.md — Create PdfExtractor class with temp file delegation
+- [x] 02-02-PLAN.md — CLI integration and tests
 
-**Success Criteria**:
-- [ ] `cosmograph generate doc.pdf` produces valid graph
-- [ ] Multi-page PDFs process as single document
-- [ ] Encrypted PDF shows clear error message
-- [ ] Tests pass with sample legal PDF
+**Results:**
+- PdfExtractor class (114 lines) with encrypted/scanned detection
+- CLI `-e pdf` option working
+- 7 PDF tests, 73 total tests passing
+- FR-1 requirements all satisfied
 
 **Requirements Satisfied**: FR-1 (PDF Document Support)
 
