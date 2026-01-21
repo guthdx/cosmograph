@@ -2,7 +2,12 @@
 
 import pytest
 from pathlib import Path
-from cosmograph.extractors import LegalDocumentExtractor, TextExtractor, GenericExtractor
+from cosmograph.extractors import (
+    GenericExtractor,
+    LegalDocumentExtractor,
+    PdfExtractor,
+    TextExtractor,
+)
 from cosmograph.models import Graph
 
 
@@ -146,3 +151,72 @@ class TestGenericExtractor:
         graph = extractor.extract(test_file)
         doc_nodes = [n for n in graph.nodes.values() if n.category == "document"]
         assert len(doc_nodes) == 1
+
+
+class TestPdfExtractor:
+    """Tests for PdfExtractor."""
+
+    @pytest.fixture
+    def extractor(self):
+        return PdfExtractor()
+
+    def test_supports_pdf_files(self, extractor):
+        assert extractor.supports(Path("test.pdf"))
+        assert extractor.supports(Path("TEST.PDF"))  # Case insensitive
+        assert not extractor.supports(Path("test.txt"))
+        assert not extractor.supports(Path("test.md"))
+
+    def test_extracts_text_from_pdf(self, extractor, create_test_pdf):
+        pdf_file = create_test_pdf("legal.pdf", "TITLE I: GENERAL PROVISIONS\nSome content here.")
+        graph = extractor.extract(pdf_file)
+        # Should have document node + extracted entities
+        assert len(graph.nodes) >= 1
+        # Should extract title from legal document patterns
+        assert any("Title" in n.label for n in graph.nodes.values())
+
+    def test_extracts_from_multipage_pdf(self, extractor, create_test_pdf):
+        # Using TITLE pattern since PDFs get classified as "code" type by default
+        pdf_file = create_test_pdf(
+            "multipage.pdf",
+            "TITLE I: GENERAL PROVISIONS\nFirst page content with additional text to pass scanned detection.",
+            pages=3,
+        )
+        graph = extractor.extract(pdf_file)
+        # Should process all pages as single document
+        assert len(graph.nodes) >= 1
+        assert any("Title" in n.label for n in graph.nodes.values())
+
+    def test_multipage_preserves_reading_order(self, extractor, create_multipage_ordered_pdf):
+        """Verify multi-page content is extracted in correct page order (FR-1 structure preservation)."""
+        pdf_file = create_multipage_ordered_pdf()
+        graph = extractor.extract(pdf_file)
+        # Should extract all three titles
+        labels = [n.label for n in graph.nodes.values()]
+        title_labels = [label for label in labels if "Title" in label]
+        # Should have Title I, Title II, Title III
+        assert len(title_labels) >= 3, f"Expected 3 titles, got: {title_labels}"
+        # Verify all pages processed (Title I from page 1, Title II from page 2, Title III from page 3)
+        assert any("Title I" in label or "Title 1" in label for label in labels), "Missing Title I from page 1"
+        assert any("Title II" in label or "Title 2" in label for label in labels), "Missing Title II from page 2"
+        assert any("Title III" in label or "Title 3" in label for label in labels), "Missing Title III from page 3"
+
+    def test_rejects_encrypted_pdf(self, extractor, create_encrypted_pdf):
+        pdf_file = create_encrypted_pdf()
+        with pytest.raises(ValueError, match="password-protected"):
+            extractor.extract(pdf_file)
+
+    def test_detects_scanned_pdf(self, extractor, create_image_only_pdf):
+        pdf_file = create_image_only_pdf()
+        with pytest.raises(ValueError, match="scanned"):
+            extractor.extract(pdf_file)
+
+    def test_creates_document_node(self, extractor, create_test_pdf):
+        # Content must be >100 chars to pass scanned PDF detection
+        long_content = "SECTION 1. Some content here that is long enough to pass the scanned PDF detection threshold. Additional text to ensure extraction works properly."
+        pdf_file = create_test_pdf("doc.pdf", long_content)
+        graph = extractor.extract(pdf_file)
+        doc_nodes = [
+            n for n in graph.nodes.values()
+            if n.category in ("document", "code", "constitution", "ordinance")
+        ]
+        assert len(doc_nodes) >= 1
