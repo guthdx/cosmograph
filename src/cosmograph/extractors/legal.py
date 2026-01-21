@@ -11,6 +11,20 @@ from .base import BaseExtractor
 class LegalDocumentExtractor(BaseExtractor):
     """Extract entities from legal documents (codes, ordinances, constitutions)."""
 
+    # Pre-compiled regex patterns
+    _ARTICLE_PATTERN = re.compile(r"ARTICLE\s+([IVX]+)[—\-\s]+([A-Z\s]+)")
+    _SECTION_PATTERN = re.compile(r"(?:SECTION|SEC\.?)\s+(\d+)\.")
+    _ORDINANCE_SECTION_PATTERN = re.compile(r"Section\s+(\d+)[.:\s]+([A-Za-z\s]+)")
+    _TITLE_PATTERN = re.compile(r"TITLE\s+([IVXLC\d]+)[:\s—\-]+([A-Z\s]+)")
+    _CHAPTER_PATTERN = re.compile(r"CHAPTER\s+([IVXLC\d]+)[,:\s—\-]+([A-Z\s]+)")
+    _OFFENSE_PATTERN = re.compile(
+        r"(?:guilty of|commits?) (?:the offense of |an offense of )?([A-Za-z\s]+?)(?:\s+if|\s+when|\s+shall)",
+        re.IGNORECASE,
+    )
+    _DEFINITION_PATTERN = re.compile(
+        r'"([A-Za-z\s]+)"\s+(?:means|shall mean|is defined as)\s+([^.]+)'
+    )
+
     # Key entities commonly found in legal documents
     KEY_ENTITIES = {
         "Tribal Council": ("authority", "Governing body of the tribe"),
@@ -64,7 +78,7 @@ class LegalDocumentExtractor(BaseExtractor):
     def _extract_constitution(self, text: str, doc_id: str, source: str) -> None:
         """Extract from constitutional documents."""
         # Articles
-        for match in re.finditer(r"ARTICLE\s+([IVX]+)[—\-\s]+([A-Z\s]+)", text):
+        for match in self._ARTICLE_PATTERN.finditer(text):
             article_num = match.group(1)
             article_title = match.group(2).strip().title()
             article_id = self.graph.add_node(
@@ -77,7 +91,7 @@ class LegalDocumentExtractor(BaseExtractor):
             self.graph.add_edge(doc_id, article_id, "contains")
 
         # Sections
-        for match in re.finditer(r"(?:SECTION|SEC\.?)\s+(\d+)\.", text):
+        for match in self._SECTION_PATTERN.finditer(text):
             section_num = match.group(1)
             section_id = self.graph.add_node(
                 f"Section {section_num}", f"Section {section_num}", "section", "", source
@@ -87,7 +101,7 @@ class LegalDocumentExtractor(BaseExtractor):
     def _extract_ordinance(self, text: str, doc_id: str, source: str) -> None:
         """Extract from ordinance documents."""
         # Sections in ordinances
-        for match in re.finditer(r"Section\s+(\d+)[.:\s]+([A-Za-z\s]+)", text):
+        for match in self._ORDINANCE_SECTION_PATTERN.finditer(text):
             section_num = match.group(1)
             section_title = match.group(2).strip()[:50]
             section_id = self.graph.add_node(
@@ -102,7 +116,7 @@ class LegalDocumentExtractor(BaseExtractor):
     def _extract_code(self, text: str, doc_id: str, source: str) -> None:
         """Extract from code documents."""
         # Titles
-        for match in re.finditer(r"TITLE\s+([IVXLC\d]+)[:\s—\-]+([A-Z\s]+)", text):
+        for match in self._TITLE_PATTERN.finditer(text):
             title_num = match.group(1)
             title_name = match.group(2).strip().title()[:40]
             title_id = self.graph.add_node(
@@ -115,7 +129,7 @@ class LegalDocumentExtractor(BaseExtractor):
             self.graph.add_edge(doc_id, title_id, "contains")
 
         # Chapters
-        for match in re.finditer(r"CHAPTER\s+([IVXLC\d]+)[,:\s—\-]+([A-Z\s]+)", text):
+        for match in self._CHAPTER_PATTERN.finditer(text):
             chapter_num = match.group(1)
             chapter_name = match.group(2).strip().title()[:40]
             chapter_id = self.graph.add_node(
@@ -128,26 +142,20 @@ class LegalDocumentExtractor(BaseExtractor):
             self.graph.add_edge(doc_id, chapter_id, "contains")
 
         # Offenses
-        offense_patterns = [
-            r"(?:guilty of|commits?) (?:the offense of |an offense of )?([A-Za-z\s]+?)(?:\s+if|\s+when|\s+shall)",
-        ]
-        for pattern in offense_patterns:
-            for match in re.finditer(pattern, text, re.IGNORECASE):
-                offense_name = match.group(1).strip().title()
-                if 5 < len(offense_name) < 50:
-                    offense_id = self.graph.add_node(
-                        offense_name,
-                        offense_name,
-                        "offense",
-                        f"Offense defined in {source}",
-                        source,
-                    )
-                    self.graph.add_edge(doc_id, offense_id, "defines")
+        for match in self._OFFENSE_PATTERN.finditer(text):
+            offense_name = match.group(1).strip().title()
+            if 5 < len(offense_name) < 50:
+                offense_id = self.graph.add_node(
+                    offense_name,
+                    offense_name,
+                    "offense",
+                    f"Offense defined in {source}",
+                    source,
+                )
+                self.graph.add_edge(doc_id, offense_id, "defines")
 
         # Definitions
-        for match in re.finditer(
-            r'"([A-Za-z\s]+)"\s+(?:means|shall mean|is defined as)\s+([^.]+)', text
-        ):
+        for match in self._DEFINITION_PATTERN.finditer(text):
             term = match.group(1).strip().title()
             definition = match.group(2).strip()[:100]
             if 2 < len(term) < 40:
