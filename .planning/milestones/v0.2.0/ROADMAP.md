@@ -88,27 +88,20 @@ Plans:
 
 ### Phase 4: LLM Extractor
 
+**Status**: Planned
 **Goal**: Claude-powered entity and relationship extraction
 
-**Rationale**: Regex patterns miss semantic relationships. LLM can understand context.
+**Plans:** 3 plans
 
-**Tasks**:
-1. Create `LlmExtractor` class inheriting `BaseExtractor`
-2. Implement document chunking for context window management
-3. Design extraction prompt (entities, relationships, structure)
-4. Implement token estimation before processing
-5. Add approval gate with estimated cost display
-6. Implement response parsing into Graph nodes/edges
-7. Add CLI option `-e llm` with confirmation prompt
-8. Add rate limiting (requests per minute)
-9. Create hybrid mode: patterns first, LLM for gaps
-10. Add tests with mocked API responses
+Plans:
+- [ ] 04-01-PLAN.md — Create LlmExtractor with structured outputs and chunking
+- [ ] 04-02-PLAN.md — Add token estimation and approval gate
+- [ ] 04-03-PLAN.md — CLI integration and mocked tests
 
 **Success Criteria**:
 - [ ] LLM extraction produces valid graph
 - [ ] Token estimate shown before processing
 - [ ] Confirmation required before API call
-- [ ] Hybrid mode works: patterns → LLM enrichment
 - [ ] Tests pass without real API calls
 
 **Requirements Satisfied**: FR-2 (LLM-Powered Extraction)
@@ -267,3 +260,4 @@ After Phase 7, verify:
 *Roadmap created: 2026-01-21*
 *Phase 1 planned: 2026-01-21*
 *Phase 3 planned: 2026-01-21*
+*Phase 4 planned: 2026-01-21*
