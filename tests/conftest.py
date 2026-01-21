@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import pytest
+import yaml
 
 from cosmograph.models import Edge, Graph, Node
 
@@ -135,3 +136,50 @@ def create_multipage_ordered_pdf(tmp_path):
         return filepath
 
     return _create
+
+
+@pytest.fixture
+def create_pattern_file(tmp_path):
+    """Factory fixture to create pattern YAML files for testing."""
+
+    def _create(filename: str, config: dict) -> Path:
+        filepath = tmp_path / filename
+        with open(filepath, "w") as f:
+            yaml.dump(config, f)
+        return filepath
+
+    return _create
+
+
+@pytest.fixture
+def valid_pattern_config():
+    """Return a valid pattern configuration dict."""
+    return {
+        "version": "1.0",
+        "name": "test-patterns",
+        "description": "Test patterns",
+        "min_occurrences": 1,
+        "entity_patterns": [
+            {
+                "name": "email",
+                "pattern": r"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})",
+                "category": "email",
+                "description": "Email addresses",
+                "min_length": 5,
+            },
+            {
+                "name": "phone",
+                "pattern": r"(\d{3}-\d{3}-\d{4})",
+                "category": "phone",
+                "description": "US phone numbers",
+            },
+        ],
+        "relationship_triggers": [
+            {
+                "name": "mentions",
+                "source_categories": ["document"],
+                "target_categories": ["email", "phone"],
+                "proximity": 0,
+            }
+        ],
+    }
