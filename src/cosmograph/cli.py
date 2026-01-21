@@ -12,17 +12,8 @@ from rich.table import Table
 
 from . import __version__
 from .config import PatternConfig, load_patterns
-from .extractors import (
-    HAS_ANTHROPIC,
-    GenericExtractor,
-    LegalDocumentExtractor,
-    LlmExtractor,
-    OperatorDeclinedError,
-    PdfExtractor,
-    TextExtractor,
-)
-from .generators import CSVGenerator, HTMLGenerator
-from .models import Graph
+from .extractors import HAS_ANTHROPIC, OperatorDeclinedError
+from .services import ExtractionService
 
 app = typer.Typer(
     name="cosmograph",
@@ -101,9 +92,6 @@ def generate(
 
     console.print(f"[dim]Found {len(files)} file(s) to process[/dim]\n")
 
-    # Initialize graph
-    graph = Graph(title=title)
-
     # Load pattern configuration if provided
     pattern_config: PatternConfig | None = None
     if patterns_file:
@@ -117,10 +105,16 @@ def generate(
             console.print(f"[red]Error:[/red] Invalid patterns file: {e}")
             raise typer.Exit(1)
 
-    # Select extractor
-    extractor_instance = _get_extractor(extractor, graph, pattern_config, no_confirm)
+    # Check LLM extractor availability before starting
+    if extractor == "llm" and not HAS_ANTHROPIC:
+        console.print("[red]Error:[/red] LLM extractor requires anthropic package.")
+        console.print("[dim]Install with: pip install cosmograph[llm][/dim]")
+        raise typer.Exit(1)
 
-    # Process files
+    # Create service
+    service = ExtractionService(output_dir=output)
+
+    # Process files with progress display
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
@@ -128,29 +122,44 @@ def generate(
     ) as progress:
         task = progress.add_task("Processing documents...", total=len(files))
 
-        for filepath in files:
-            progress.update(task, description=f"Processing {filepath.name}...")
-            try:
-                extractor_instance.extract(filepath)
-            except OperatorDeclinedError:
-                console.print("[yellow]LLM extraction declined by operator[/yellow]")
-                raise typer.Exit(0)  # Not an error, just a user decision
-            except Exception as e:
-                console.print(f"[yellow]Warning:[/yellow] Failed to process {filepath.name}: {e}")
-            progress.advance(task)
+        def update_progress(current: int, total: int) -> None:
+            """Update progress bar after each file."""
+            # Set the current file being processed (for display)
+            if current < len(files):
+                progress.update(task, description=f"Processing file {current}/{total}...")
+            progress.update(task, completed=current)
 
-    # Generate outputs
-    output.mkdir(parents=True, exist_ok=True)
+        try:
+            graph = service.process_files(
+                files=files,
+                extractor_type=extractor,
+                title=title,
+                pattern_config=pattern_config,
+                progress_callback=update_progress,
+                interactive=not no_confirm,
+            )
+        except OperatorDeclinedError:
+            console.print("[yellow]LLM extraction declined by operator[/yellow]")
+            raise typer.Exit(0)  # Not an error, just a user decision
+        except ValueError as e:
+            # Handle extractor errors (e.g., LLM not available)
+            console.print(f"[red]Error:[/red] {e}")
+            raise typer.Exit(1)
 
-    if not html_only:
-        csv_gen = CSVGenerator()
-        nodes_file, edges_file = csv_gen.generate(graph, output)
-        console.print(f"[green]✓[/green] Generated {nodes_file.name}")
-        console.print(f"[green]✓[/green] Generated {edges_file.name}")
+    # Generate outputs using service
+    outputs = service.generate_outputs(
+        graph=graph,
+        output_dir=output,
+        title=title,
+        html_only=html_only,
+    )
 
-    html_gen = HTMLGenerator()
-    html_file = html_gen.generate(graph, output / "index.html", title)
-    console.print(f"[green]✓[/green] Generated {html_file.name}")
+    # Report generated files
+    if "nodes_csv" in outputs:
+        console.print(f"[green]OK[/green] Generated {outputs['nodes_csv'].name}")
+    if "edges_csv" in outputs:
+        console.print(f"[green]OK[/green] Generated {outputs['edges_csv'].name}")
+    console.print(f"[green]OK[/green] Generated {outputs['html'].name}")
 
     # Print stats
     stats = graph.get_stats()
@@ -162,7 +171,7 @@ def generate(
     if open_browser:
         import webbrowser
 
-        webbrowser.open(f"file://{html_file.absolute()}")
+        webbrowser.open(f"file://{outputs['html'].absolute()}")
 
 
 @app.command()
@@ -204,8 +213,8 @@ def stats(
         with open(edges_file, encoding="utf-8") as f:
             total_edges = sum(1 for _ in f) - 1  # Subtract header
 
-    stats = {"nodes": total_nodes, "edges": total_edges, "categories": categories}
-    _print_stats(stats)
+    stats_data = {"nodes": total_nodes, "edges": total_edges, "categories": categories}
+    _print_stats(stats_data)
 
 
 @app.command()
@@ -236,36 +245,6 @@ def serve(
             httpd.serve_forever()
         except KeyboardInterrupt:
             console.print("\n[dim]Server stopped[/dim]")
-
-
-def _get_extractor(
-    extractor_type: str,
-    graph: Graph,
-    config: PatternConfig | None = None,
-    no_confirm: bool = False,
-):
-    """Get the appropriate extractor based on type."""
-    if extractor_type == "legal":
-        return LegalDocumentExtractor(graph)
-    elif extractor_type == "text":
-        return TextExtractor(graph)
-    elif extractor_type == "generic":
-        if config is not None:
-            return GenericExtractor(graph, config=config)
-        return GenericExtractor(graph)
-    elif extractor_type == "pdf":
-        return PdfExtractor(graph)
-    elif extractor_type == "llm":
-        if not HAS_ANTHROPIC:
-            console.print("[red]Error:[/red] LLM extractor requires anthropic package.")
-            console.print("[dim]Install with: pip install cosmograph[llm][/dim]")
-            raise typer.Exit(1)
-        if LlmExtractor is None:
-            console.print("[red]Error:[/red] LLM extractor failed to load.")
-            raise typer.Exit(1)
-        return LlmExtractor(graph, interactive=not no_confirm)
-    else:  # auto
-        return LegalDocumentExtractor(graph)  # Default to legal for now
 
 
 def _print_stats(stats: dict):
