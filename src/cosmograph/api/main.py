@@ -16,7 +16,7 @@ from .exceptions import (
     extraction_error_handler,
     job_not_found_handler,
 )
-from .routes import health
+from .routes import extract, health
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +55,7 @@ app.add_exception_handler(JobNotFoundError, job_not_found_handler)  # type: igno
 
 # Include routers
 app.include_router(health.router)
+app.include_router(extract.router)
 
 
 @app.get("/", include_in_schema=False)
