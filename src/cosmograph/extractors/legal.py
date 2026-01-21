@@ -2,7 +2,6 @@
 
 import re
 from pathlib import Path
-from typing import Optional
 
 from ..models import Graph
 from .base import BaseExtractor
@@ -18,7 +17,8 @@ class LegalDocumentExtractor(BaseExtractor):
     _TITLE_PATTERN = re.compile(r"TITLE\s+([IVXLC\d]+)[:\s—\-]+([A-Z\s]+)")
     _CHAPTER_PATTERN = re.compile(r"CHAPTER\s+([IVXLC\d]+)[,:\s—\-]+([A-Z\s]+)")
     _OFFENSE_PATTERN = re.compile(
-        r"(?:guilty of|commits?) (?:the offense of |an offense of )?([A-Za-z\s]+?)(?:\s+if|\s+when|\s+shall)",
+        r"(?:guilty of|commits?) (?:the offense of |an offense of )?"
+        r"([A-Za-z\s]+?)(?:\s+if|\s+when|\s+shall)",
         re.IGNORECASE,
     )
     _DEFINITION_PATTERN = re.compile(
