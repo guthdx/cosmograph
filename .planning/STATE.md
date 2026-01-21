@@ -3,10 +3,10 @@
 ## Current Position
 
 **Milestone**: v0.2.0 - Web Foundation
-**Phase**: 03-pattern-configuration (3 of 7)
-**Plan**: 03 of 3
-**Status**: Phase complete
-**Last activity**: 2026-01-21 - Completed 03-03-PLAN.md
+**Phase**: 04-llm-extractor (4 of 7)
+**Plan**: 01 of 3
+**Status**: In progress
+**Last activity**: 2026-01-21 - Completed 04-01-PLAN.md
 
 Progress: [███░░░░░░░] 3/7 phases complete
 
@@ -14,10 +14,10 @@ Progress: [███░░░░░░░] 3/7 phases complete
 
 | Phase | Status | Plans |
 |-------|--------|-------|
-| 01 | ✓ complete | 5/5 |
-| 02 | ✓ complete | 2/2 |
-| 03 | ✓ complete | 3/3 |
-| 04 | pending | 0/? |
+| 01 | complete | 5/5 |
+| 02 | complete | 2/2 |
+| 03 | complete | 3/3 |
+| 04 | in progress | 1/3 |
 | 05 | pending | 0/? |
 | 06 | pending | 0/? |
 | 07 | pending | 0/? |
@@ -40,6 +40,10 @@ Progress: [███░░░░░░░] 3/7 phases complete
 - **2026-01-21**: Pattern metadata stored in _pattern_metadata dict for O(1) lookups (03-02)
 - **2026-01-21**: CLI --patterns only affects generic extractor; other extractors ignore it (03-02)
 - **2026-01-21**: Dict-based pattern conversion for integration tests until config= parameter available (03-03)
+- **2026-01-21**: Use claude-sonnet-4-5 as default model for LLM extraction (04-01)
+- **2026-01-21**: 400K char chunks with 2K overlap for document processing (04-01)
+- **2026-01-21**: Dynamic retry decorator application to avoid mypy no-redef errors (04-01)
+- **2026-01-21**: Export HAS_ANTHROPIC flag for runtime LLM feature detection (04-01)
 
 ## Blockers
 
@@ -51,6 +55,6 @@ Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska clien
 
 ## Session Continuity
 
-Last session: 2026-01-21T21:49:17Z
-Stopped at: Completed 03-03-PLAN.md (Phase 03 complete)
+Last session: 2026-01-21T22:12:34Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
