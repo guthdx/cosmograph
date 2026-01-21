@@ -1,0 +1,35 @@
+version: "1.0"
+name: "default"
+description: "Generic document extraction patterns"
+min_occurrences: 2
+
+entity_patterns:
+  - name: proper_noun
+    pattern: '\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b'
+    category: proper_noun
+    description: "Multi-word capitalized phrases (names, places)"
+    min_length: 3
+
+  - name: acronym
+    pattern: '\b([A-Z]{2,6})\b'
+    category: acronym
+    description: "Uppercase acronyms 2-6 characters"
+    min_length: 2
+
+  - name: quoted_term
+    pattern: '"([^"]+)"'
+    category: quoted_term
+    description: "Text in double quotes"
+    min_length: 2
+
+  - name: section_ref
+    pattern: '(?:Section|§)\s*(\d+(?:\.\d+)*)'
+    category: section_ref
+    description: "Section number references"
+    min_length: 1
+
+relationship_triggers:
+  - name: mentions
+    source_categories: [document]
+    target_categories: [proper_noun, acronym, quoted_term, section_ref]
+    proximity: 0
