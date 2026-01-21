@@ -145,6 +145,13 @@ class LlmExtractor(BaseExtractor):
     MAX_CHUNK_CHARS = 400_000
     OVERLAP_CHARS = 2_000  # ~500 tokens overlap
 
+    # Pricing per million tokens (as of 2026-01)
+    _PRICING: dict[str, dict[str, float]] = {
+        "claude-sonnet-4-5": {"input": 3.00, "output": 15.00},
+        "claude-haiku-4-5": {"input": 1.00, "output": 5.00},
+        "claude-opus-4-5": {"input": 5.00, "output": 25.00},
+    }
+
     def __init__(
         self,
         graph: Graph | None = None,
@@ -181,6 +188,75 @@ class LlmExtractor(BaseExtractor):
                 "ANTHROPIC_API_KEY environment variable not set or invalid. "
                 "Set it with: export ANTHROPIC_API_KEY=your-key"
             ) from e
+
+    def _calculate_cost(self, input_tokens: int, output_tokens: int) -> float:
+        """Calculate API cost in USD.
+
+        Args:
+            input_tokens: Number of input tokens
+            output_tokens: Number of output tokens (actual or estimated)
+
+        Returns:
+            Estimated cost in USD
+        """
+        prices = self._PRICING.get(self.model, self._PRICING["claude-sonnet-4-5"])
+        input_cost = (input_tokens / 1_000_000) * prices["input"]
+        output_cost = (output_tokens / 1_000_000) * prices["output"]
+        return input_cost + output_cost
+
+    def estimate_tokens(
+        self, text: str, chunks: list[str] | None = None
+    ) -> dict[str, Any]:
+        """Count tokens and estimate cost before extraction.
+
+        Uses the official token counting API (free call) for accurate counts.
+
+        Args:
+            text: Full document text (used for single-document estimation)
+            chunks: Optional pre-computed chunks (for chunked document estimation)
+
+        Returns:
+            Dict with:
+                - input_tokens: int (from API)
+                - estimated_output_tokens: int (conservative estimate)
+                - estimated_cost_usd: float
+                - model: str
+                - chunk_count: int
+        """
+        if self.client is None:
+            raise RuntimeError("Anthropic client not initialized")
+
+        # Use chunks if provided, otherwise use full text
+        if chunks is None:
+            chunks = [text]
+
+        total_input_tokens = 0
+
+        for chunk in chunks:
+            # Count tokens using official API (free call)
+            count_response = self.client.messages.count_tokens(
+                model=self.model,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": chunk}],
+            )
+            total_input_tokens += count_response.input_tokens
+
+        # Conservative output estimate: extraction typically <25% of input, capped at 4096/chunk
+        max_output_per_chunk = 4096
+        estimated_output = min(
+            total_input_tokens // 4, max_output_per_chunk * len(chunks)
+        )
+
+        # Calculate estimated cost
+        estimated_cost = self._calculate_cost(total_input_tokens, estimated_output)
+
+        return {
+            "input_tokens": total_input_tokens,
+            "estimated_output_tokens": estimated_output,
+            "estimated_cost_usd": estimated_cost,
+            "model": self.model,
+            "chunk_count": len(chunks),
+        }
 
     def supports(self, filepath: Path) -> bool:
         """Check if this extractor supports the given file type.
