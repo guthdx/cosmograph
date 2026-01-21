@@ -1,14 +1,17 @@
 """Command-line interface for Cosmograph."""
 
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
+import yaml
+from pydantic import ValidationError
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from . import __version__
+from .config import PatternConfig, load_patterns
 from .extractors import GenericExtractor, LegalDocumentExtractor, PdfExtractor, TextExtractor
 from .generators import CSVGenerator, HTMLGenerator
 from .models import Graph
@@ -48,6 +51,17 @@ def generate(
         "auto", "-e", "--extractor", help="Extractor type: auto, legal, text, generic, pdf"
     ),
     pattern: str = typer.Option("*.txt", "-p", "--pattern", help="File pattern when input is directory"),
+    patterns_file: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--patterns",
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="Path to patterns.yaml configuration file (used with -e generic)",
+        ),
+    ] = None,
     html_only: bool = typer.Option(False, "--html-only", help="Only generate HTML, skip CSV"),
     open_browser: bool = typer.Option(True, "--open/--no-open", help="Open result in browser"),
 ):
@@ -73,8 +87,21 @@ def generate(
     # Initialize graph
     graph = Graph(title=title)
 
+    # Load pattern configuration if provided
+    pattern_config: Optional[PatternConfig] = None
+    if patterns_file:
+        try:
+            pattern_config = load_patterns(patterns_file)
+            console.print(
+                f"[dim]Loaded {len(pattern_config.entity_patterns)} patterns "
+                f"from {patterns_file.name}[/dim]"
+            )
+        except (ValueError, ValidationError, yaml.YAMLError) as e:
+            console.print(f"[red]Error:[/red] Invalid patterns file: {e}")
+            raise typer.Exit(1)
+
     # Select extractor
-    extractor_instance = _get_extractor(extractor, graph)
+    extractor_instance = _get_extractor(extractor, graph, pattern_config)
 
     # Process files
     with Progress(
@@ -189,13 +216,17 @@ def serve(
             console.print("\n[dim]Server stopped[/dim]")
 
 
-def _get_extractor(extractor_type: str, graph: Graph):
+def _get_extractor(
+    extractor_type: str, graph: Graph, config: Optional[PatternConfig] = None
+):
     """Get the appropriate extractor based on type."""
     if extractor_type == "legal":
         return LegalDocumentExtractor(graph)
     elif extractor_type == "text":
         return TextExtractor(graph)
     elif extractor_type == "generic":
+        if config is not None:
+            return GenericExtractor(graph, config=config)
         return GenericExtractor(graph)
     elif extractor_type == "pdf":
         return PdfExtractor(graph)
