@@ -45,6 +45,7 @@ htmlcov/
 # Output
 output/
 *.html
+!frontend/index.html
 graph_*.csv
 
 # OS
