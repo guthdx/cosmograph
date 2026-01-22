@@ -6,8 +6,8 @@ This file provides guidance to Claude Code when working with this repository.
 
 **Cosmograph** is a document-to-knowledge-graph service for Iyeska client work. It extracts entities and relationships from legal codes, policies, and project documents, producing interactive D3.js visualizations.
 
-**Current Version**: v0.1.0 (CLI) → Evolving to v0.2.0 (Web Service)
-**Status**: Planning complete, ready for Phase 1 execution
+**Current Version**: v0.2.0 (Web Service)
+**Status**: Deployed and operational at https://cosmo.iyeska.net
 
 ## Iyeska Infrastructure Context
 
@@ -199,6 +199,32 @@ pytest --cov=src/cosmograph --cov-report=html
 - `.planning/REQUIREMENTS.md` - v0.2.0 requirements
 - `.planning/milestones/v0.2.0/ROADMAP.md` - Phase breakdown
 - `.planning/codebase/*.md` - Architecture analysis
+
+## Production Deployment
+
+**URL:** https://cosmo.iyeska.net
+**Server:** 192.168.11.20 (Iyeska HQ Ubuntu)
+**Port:** 8003
+**Process Manager:** PM2
+
+### Deploy updates
+```bash
+ssh iyeska-hq
+cd ~/projects/cosmograph
+./deploy.sh
+```
+
+### Check status
+```bash
+pm2 status cosmograph
+pm2 logs cosmograph
+```
+
+### Verify health
+```bash
+curl https://cosmo.iyeska.net/health
+# Returns: {"status":"healthy","version":"0.1.0"}
+```
 
 ## GSD Commands
 
