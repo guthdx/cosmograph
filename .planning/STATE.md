@@ -4,9 +4,9 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 06-react-frontend (6 of 7)
-**Plan**: 01 of 4
+**Plan**: 02 of 4
 **Status**: In progress
-**Last activity**: 2026-01-22 - Completed 06-01-PLAN.md
+**Last activity**: 2026-01-22 - Completed 06-02-PLAN.md
 
 Progress: [█████░░░░░] 5/7 phases complete
 
@@ -19,7 +19,7 @@ Progress: [█████░░░░░] 5/7 phases complete
 | 03 | complete | 3/3 |
 | 04 | complete | 3/3 |
 | 05 | complete | 5/5 |
-| 06 | in progress | 1/4 |
+| 06 | in progress | 2/4 |
 | 07 | pending | 0/? |
 
 ## Decisions Made
@@ -69,6 +69,9 @@ Progress: [█████░░░░░] 5/7 phases complete
 - **2026-01-21**: Service layer shared by CLI and API for code reuse (05-05)
 - **2026-01-22**: ES2022 class syntax (no parameter properties) for Vite erasableSyntaxOnly mode (06-01)
 - **2026-01-22**: Type union over enum for JobStatus/ExtractorType - simpler, no runtime overhead (06-01)
+- **2026-01-22**: Native HTML5 DnD API over react-dropzone - no external dependency (06-02)
+- **2026-01-22**: Type-only imports for verbatimModuleSyntax compliance (06-02)
+- **2026-01-22**: Controlled components with callback props for state lifting (06-02)
 
 ## Blockers
 
@@ -80,16 +83,19 @@ Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska clien
 
 Phase 6 (React Frontend) IN PROGRESS:
 - Plan 01 complete: Vite + React + TypeScript project initialized
+- Plan 02 complete: File upload and extraction options components
 - API proxy configured for /api/* to localhost:8000
 - TypeScript types created matching backend schemas
 - Typed API service layer with all extraction endpoints
+- FileUpload component with drag-drop and file picker
+- ExtractionOptions with extractor dropdown and LLM confirmation gate
 
-Next: Plan 02 - File upload and extraction options components
+Next: Plan 03 - Progress display, results, and API integration
 
 Total tests: 169 passing
 
 ## Session Continuity
 
-Last session: 2026-01-22T16:37:04Z
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-01-22T16:40:32Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
