@@ -1,0 +1,35 @@
+/* frontend/src/components/DownloadButtons.css */
+.download-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn-download {
+  flex: 1;
+  padding: 12px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.btn-html {
+  background: #4fc3f7;
+  color: #000;
+}
+
+.btn-html:hover {
+  background: #29b6f6;
+}
+
+.btn-csv {
+  background: #444;
+  color: #fff;
+}
+
+.btn-csv:hover {
+  background: #555;
+}

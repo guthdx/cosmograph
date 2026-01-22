@@ -1,0 +1,15 @@
+/* frontend/src/components/GraphPreview.css */
+.graph-preview {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.graph-preview iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
