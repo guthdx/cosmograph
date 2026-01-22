@@ -3,12 +3,12 @@
 ## Current Position
 
 **Milestone**: v0.2.0 - Web Foundation
-**Phase**: 06-react-frontend (6 of 7)
-**Plan**: 03 of 4
-**Status**: In progress
-**Last activity**: 2026-01-22 - Completed 06-03-PLAN.md
+**Phase**: 06-react-frontend (6 of 7) COMPLETE
+**Plan**: 04 of 4
+**Status**: Phase complete
+**Last activity**: 2026-01-22 - Completed 06-04-PLAN.md
 
-Progress: [█████░░░░░] 5/7 phases complete
+Progress: [██████░░░░] 6/7 phases complete
 
 ## Progress
 
@@ -19,7 +19,7 @@ Progress: [█████░░░░░] 5/7 phases complete
 | 03 | complete | 3/3 |
 | 04 | complete | 3/3 |
 | 05 | complete | 5/5 |
-| 06 | in progress | 3/4 |
+| 06 | complete | 4/4 |
 | 07 | pending | 0/? |
 
 ## Decisions Made
@@ -75,6 +75,9 @@ Progress: [█████░░░░░] 5/7 phases complete
 - **2026-01-22**: Native EventSource for SSE - browser handles reconnection automatically (06-03)
 - **2026-01-22**: Derived state pattern - extraction state computed from multiple sources (06-03)
 - **2026-01-22**: Sandboxed iframe (allow-scripts) for secure D3.js visualization embedding (06-03)
+- **2026-01-22**: ErrorDisplay as reusable component with callback props for retry/dismiss (06-04)
+- **2026-01-22**: Traefik config stored in project; symlink to active Traefik instance (06-04)
+- **2026-01-22**: host.docker.internal for Docker Traefik to reach host services (06-04)
 
 ## Blockers
 
@@ -84,19 +87,26 @@ None
 
 Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska client document processing services.
 
-Phase 6 (React Frontend) IN PROGRESS:
-- Plan 01 complete: Vite + React + TypeScript project initialized
-- Plan 02 complete: File upload and extraction options components
-- Plan 03 complete: SSE progress streaming, graph preview, download buttons
-- Complete extraction workflow functional
-- API proxy configured for /api/* to localhost:8000
+Phase 6 (React Frontend) COMPLETE:
+- Plan 01: Vite + React + TypeScript project initialized
+- Plan 02: File upload and extraction options components
+- Plan 03: SSE progress streaming, graph preview, download buttons
+- Plan 04: Error handling component, Traefik configuration
 
-Next: Plan 04 - Final polish and error handling (if needed)
+Frontend delivers complete extraction workflow:
+- File upload (drag & drop + file picker)
+- Extraction method selection with LLM confirmation gate
+- Real-time SSE progress streaming
+- Graph visualization in sandboxed iframe
+- HTML and CSV downloads
+- Error handling with retry/dismiss
+
+Next: Phase 07 - Deployment to Iyeska HQ infrastructure
 
 Total tests: 169 passing
 
 ## Session Continuity
 
-Last session: 2026-01-22T16:44:19Z
-Stopped at: Completed 06-03-PLAN.md
+Last session: 2026-01-22T17:30:00Z
+Stopped at: Completed 06-04-PLAN.md (Phase 6 complete)
 Resume file: None
