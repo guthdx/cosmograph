@@ -36,13 +36,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS for local development
+# CORS for local development and production
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:5173",
         "http://cosmograph.localhost",
+        "https://cosmograph.iyeska.net",
     ],
     allow_credentials=True,
     allow_methods=["*"],
