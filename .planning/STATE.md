@@ -3,10 +3,10 @@
 ## Current Position
 
 **Milestone**: v0.2.0 - Web Foundation
-**Phase**: 05-fastapi-backend (5 of 7)
-**Plan**: 05 of 5 (PHASE COMPLETE)
-**Status**: Phase verified
-**Last activity**: 2026-01-21 - Phase 5 verified (all success criteria met)
+**Phase**: 06-react-frontend (6 of 7)
+**Plan**: 01 of 4
+**Status**: In progress
+**Last activity**: 2026-01-22 - Completed 06-01-PLAN.md
 
 Progress: [█████░░░░░] 5/7 phases complete
 
@@ -18,8 +18,8 @@ Progress: [█████░░░░░] 5/7 phases complete
 | 02 | complete | 2/2 |
 | 03 | complete | 3/3 |
 | 04 | complete | 3/3 |
-| 05 | ✓ complete | 5/5 |
-| 06 | pending | 0/? |
+| 05 | complete | 5/5 |
+| 06 | in progress | 1/4 |
 | 07 | pending | 0/? |
 
 ## Decisions Made
@@ -67,6 +67,8 @@ Progress: [█████░░░░░] 5/7 phases complete
 - **2026-01-21**: Job store reset fixture with autouse=True for test isolation (05-05)
 - **2026-01-21**: CLI uses ExtractionService.process_files() with progress_callback (05-05)
 - **2026-01-21**: Service layer shared by CLI and API for code reuse (05-05)
+- **2026-01-22**: ES2022 class syntax (no parameter properties) for Vite erasableSyntaxOnly mode (06-01)
+- **2026-01-22**: Type union over enum for JobStatus/ExtractorType - simpler, no runtime overhead (06-01)
 
 ## Blockers
 
@@ -76,25 +78,18 @@ None
 
 Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska client document processing services.
 
-Phase 5 (FastAPI Backend) COMPLETE:
-- POST /api/extract accepts file uploads, returns job_id
-- GET /api/extract/{job_id} returns job status with progress
-- GET /api/extract/{job_id}/progress streams SSE progress updates
-- GET /api/graph/{job_id} returns graph JSON
-- GET /api/download/{job_id} downloads HTML visualization
-- GET /api/download/{job_id}/csv downloads CSV ZIP archive
-- 23 API tests with 83% coverage
-- CLI refactored to use ExtractionService
+Phase 6 (React Frontend) IN PROGRESS:
+- Plan 01 complete: Vite + React + TypeScript project initialized
+- API proxy configured for /api/* to localhost:8000
+- TypeScript types created matching backend schemas
+- Typed API service layer with all extraction endpoints
 
-Full extraction flow verified:
-- Upload files -> background processing -> poll/SSE for progress -> get graph JSON -> download files
+Next: Plan 02 - File upload and extraction options components
 
 Total tests: 169 passing
 
-Next: Phase 06 - React Frontend
-
 ## Session Continuity
 
-Last session: 2026-01-21T23:07:22Z
-Stopped at: Completed 05-05-PLAN.md (Phase 05 complete)
+Last session: 2026-01-22T16:37:04Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None
