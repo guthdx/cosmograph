@@ -4,9 +4,9 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 07-deployment (7 of 7)
-**Plan**: 02 of ?
+**Plan**: 02 of 3
 **Status**: In progress
-**Last activity**: 2026-01-22 - Completed 07-02-PLAN.md
+**Last activity**: 2026-01-22 - Completed 07-01-PLAN.md
 
 Progress: [██████░░░░] 6/7 phases complete
 
@@ -20,7 +20,7 @@ Progress: [██████░░░░] 6/7 phases complete
 | 04 | complete | 3/3 |
 | 05 | complete | 5/5 |
 | 06 | complete | 4/4 |
-| 07 | in progress | 2/? |
+| 07 | in progress | 2/3 |
 
 ## Decisions Made
 
@@ -81,6 +81,10 @@ Progress: [██████░░░░] 6/7 phases complete
 - **2026-01-22**: Static files only activate if frontend/dist exists (07-02)
 - **2026-01-22**: API routes registered before static files for precedence (07-02)
 - **2026-01-22**: Catch-all serves index.html for client-side routing (07-02)
+- **2026-01-22**: Port 8003 for cosmograph (next available per PORT_REGISTRY.md) (07-01)
+- **2026-01-22**: Relative base path './' in Vite for static asset serving (07-01)
+- **2026-01-22**: npm ci for clean, reproducible frontend builds (07-01)
+- **2026-01-22**: --update-env flag for PM2 restart to pick up env changes (07-01)
 
 ## Blockers
 
@@ -105,16 +109,16 @@ Frontend delivers complete extraction workflow:
 - Error handling with retry/dismiss
 
 Phase 07 (Deployment) IN PROGRESS:
-- Plan 01: CORS update for production origin (completed)
+- Plan 01: Deployment configuration (completed) - ecosystem.config.js, deploy.sh, Vite/CORS updates
 - Plan 02: Static file serving for frontend (completed)
 
 FastAPI now serves both API and React frontend from single process.
-Ready for PM2 configuration and Cloudflare Tunnel setup.
+PM2 ecosystem and deploy script ready. Next: Plan 03 validation/final checks.
 
 Total tests: 169 passing
 
 ## Session Continuity
 
-Last session: 2026-01-22T17:59:49Z
-Stopped at: Completed 07-02-PLAN.md
+Last session: 2026-01-22T18:00:00Z
+Stopped at: Completed 07-01-PLAN.md
 Resume file: None
