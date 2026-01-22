@@ -1,0 +1,54 @@
+/* frontend/src/components/ExtractionOptions.css */
+.extraction-options {
+  margin-bottom: 20px;
+}
+
+.option-group {
+  margin-bottom: 16px;
+}
+
+.option-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ccc;
+}
+
+.option-group select,
+.option-group input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.option-group select:focus,
+.option-group input:focus {
+  outline: none;
+  border-color: #4fc3f7;
+}
+
+.option-group select:disabled,
+.option-group input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.option-description {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.llm-confirmed-notice {
+  padding: 10px;
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid #ff9800;
+  border-radius: 4px;
+  color: #ffb74d;
+  font-size: 13px;
+}
