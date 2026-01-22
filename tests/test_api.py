@@ -348,11 +348,12 @@ class TestDownloadEndpoint:
 class TestRootEndpoint:
     """Tests for the root endpoint."""
 
-    def test_root_redirects_to_docs(self):
-        """GET / redirects to /docs."""
+    def test_root_serves_frontend(self):
+        """GET / serves frontend index.html when dist exists."""
         response = client.get("/", follow_redirects=False)
-        assert response.status_code == 307
-        assert "/docs" in response.headers["location"]
+        # When frontend/dist exists, serves index.html
+        assert response.status_code == 200
+        assert b"<!doctype html>" in response.content.lower()
 
 
 class TestExtractorTypes:
