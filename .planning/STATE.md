@@ -4,9 +4,9 @@
 
 **Milestone**: v0.2.0 - Web Foundation
 **Phase**: 06-react-frontend (6 of 7)
-**Plan**: 02 of 4
+**Plan**: 03 of 4
 **Status**: In progress
-**Last activity**: 2026-01-22 - Completed 06-02-PLAN.md
+**Last activity**: 2026-01-22 - Completed 06-03-PLAN.md
 
 Progress: [█████░░░░░] 5/7 phases complete
 
@@ -19,7 +19,7 @@ Progress: [█████░░░░░] 5/7 phases complete
 | 03 | complete | 3/3 |
 | 04 | complete | 3/3 |
 | 05 | complete | 5/5 |
-| 06 | in progress | 2/4 |
+| 06 | in progress | 3/4 |
 | 07 | pending | 0/? |
 
 ## Decisions Made
@@ -72,6 +72,9 @@ Progress: [█████░░░░░] 5/7 phases complete
 - **2026-01-22**: Native HTML5 DnD API over react-dropzone - no external dependency (06-02)
 - **2026-01-22**: Type-only imports for verbatimModuleSyntax compliance (06-02)
 - **2026-01-22**: Controlled components with callback props for state lifting (06-02)
+- **2026-01-22**: Native EventSource for SSE - browser handles reconnection automatically (06-03)
+- **2026-01-22**: Derived state pattern - extraction state computed from multiple sources (06-03)
+- **2026-01-22**: Sandboxed iframe (allow-scripts) for secure D3.js visualization embedding (06-03)
 
 ## Blockers
 
@@ -84,18 +87,16 @@ Project evolving from CLI tool (v0.1.0) to web service (v0.2.0) for Iyeska clien
 Phase 6 (React Frontend) IN PROGRESS:
 - Plan 01 complete: Vite + React + TypeScript project initialized
 - Plan 02 complete: File upload and extraction options components
+- Plan 03 complete: SSE progress streaming, graph preview, download buttons
+- Complete extraction workflow functional
 - API proxy configured for /api/* to localhost:8000
-- TypeScript types created matching backend schemas
-- Typed API service layer with all extraction endpoints
-- FileUpload component with drag-drop and file picker
-- ExtractionOptions with extractor dropdown and LLM confirmation gate
 
-Next: Plan 03 - Progress display, results, and API integration
+Next: Plan 04 - Final polish and error handling (if needed)
 
 Total tests: 169 passing
 
 ## Session Continuity
 
-Last session: 2026-01-22T16:40:32Z
-Stopped at: Completed 06-02-PLAN.md
+Last session: 2026-01-22T16:44:19Z
+Stopped at: Completed 06-03-PLAN.md
 Resume file: None
