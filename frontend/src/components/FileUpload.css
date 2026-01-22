@@ -1,0 +1,109 @@
+/* frontend/src/components/FileUpload.css */
+.file-upload {
+  margin-bottom: 20px;
+}
+
+.drop-zone {
+  border: 2px dashed #666;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #1a1a1a;
+}
+
+.drop-zone:hover:not(.disabled) {
+  border-color: #4fc3f7;
+  background: rgba(79, 195, 247, 0.05);
+}
+
+.drop-zone.dragging {
+  border-color: #4fc3f7;
+  background: rgba(79, 195, 247, 0.1);
+}
+
+.drop-zone.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.drop-zone input[type="file"] {
+  display: none;
+}
+
+.drop-text {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #ccc;
+}
+
+.supported-formats {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.file-list {
+  margin-top: 16px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+.file-list h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.file-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #333;
+}
+
+.file-list li:last-child {
+  border-bottom: none;
+}
+
+.file-name {
+  flex: 1;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-size {
+  color: #888;
+  font-size: 12px;
+}
+
+.remove-btn {
+  padding: 2px 8px;
+  font-size: 12px;
+  background: #444;
+  border: none;
+  border-radius: 3px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background: #c62828;
+  color: #fff;
+}
+
+.remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
