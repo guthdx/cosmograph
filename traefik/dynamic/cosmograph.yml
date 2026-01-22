@@ -1,0 +1,46 @@
+# Traefik Dynamic Configuration for Cosmograph
+#
+# This file provides routing rules for cosmograph.localhost.
+# To use this configuration, you have two options:
+#
+# Option 1: Add file provider to Traefik (recommended for native dev)
+#   Add to ~/terminal_projects/claude_code/traefik/docker-compose.yml:
+#   command:
+#     - "--providers.file.directory=/dynamic"
+#   volumes:
+#     - ./dynamic:/dynamic:ro
+#   Then symlink or copy this file to that directory.
+#
+# Option 2: Run cosmograph in Docker (see docker-compose.yml in project root)
+#   Uses Docker labels instead of this file.
+#
+# Routes:
+#   http://cosmograph.localhost       -> Frontend (Vite dev server :5173)
+#   http://cosmograph.localhost/api/* -> Backend (FastAPI :8000)
+
+http:
+  routers:
+    # Frontend router - serves the React app
+    cosmograph-frontend:
+      rule: "Host(`cosmograph.localhost`) && !PathPrefix(`/api`)"
+      service: cosmograph-frontend
+      entrypoints:
+        - web
+
+    # API router - proxies to FastAPI backend
+    cosmograph-api:
+      rule: "Host(`cosmograph.localhost`) && PathPrefix(`/api`)"
+      service: cosmograph-api
+      entrypoints:
+        - web
+
+  services:
+    cosmograph-frontend:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:5173"
+
+    cosmograph-api:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:8000"
