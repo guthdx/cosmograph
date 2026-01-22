@@ -1,0 +1,60 @@
+/* frontend/src/components/ErrorDisplay.css */
+.error-display {
+  padding: 16px;
+  background: rgba(239, 83, 80, 0.1);
+  border: 1px solid #ef5350;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.error-content {
+  margin-bottom: 12px;
+}
+
+.error-title {
+  display: block;
+  color: #ef5350;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.error-display .error-message {
+  margin: 0;
+  color: #ffcdd2;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.error-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-retry {
+  padding: 8px 16px;
+  font-size: 13px;
+  background: #ef5350;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-retry:hover {
+  background: #e53935;
+}
+
+.btn-dismiss {
+  padding: 8px 16px;
+  font-size: 13px;
+  background: transparent;
+  border: 1px solid #666;
+  border-radius: 4px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.btn-dismiss:hover {
+  border-color: #888;
+  color: #ccc;
+}

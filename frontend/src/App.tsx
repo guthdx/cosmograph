@@ -5,6 +5,7 @@ import { ExtractionOptions } from './components/ExtractionOptions';
 import { ProgressDisplay } from './components/ProgressDisplay';
 import { GraphPreview } from './components/GraphPreview';
 import { DownloadButtons } from './components/DownloadButtons';
+import { ErrorDisplay } from './components/ErrorDisplay';
 import { useExtraction } from './hooks/useExtraction';
 import type { ExtractionOptions as Options } from './types';
 import './App.css';
@@ -69,9 +70,12 @@ function App() {
 
             {isFailed && extraction.error && (
               <section className="error-section">
-                <div className="error-message">
-                  <strong>Error:</strong> {extraction.error}
-                </div>
+                <ErrorDisplay
+                  title="Extraction Failed"
+                  message={extraction.error}
+                  onRetry={handleStartExtraction}
+                  onDismiss={() => extraction.reset()}
+                />
               </section>
             )}
 
