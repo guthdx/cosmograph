@@ -1,5 +1,6 @@
 // frontend/src/components/FileUpload.tsx
-import { useState, DragEvent, ChangeEvent, useRef } from 'react';
+import { useState, useRef } from 'react';
+import type { DragEvent, ChangeEvent } from 'react';
 import './FileUpload.css';
 
 interface FileUploadProps {
