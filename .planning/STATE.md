@@ -3,10 +3,10 @@
 ## Current Position
 
 **Milestone**: v0.2.0 - Web Foundation
-**Phase**: 06-react-frontend (6 of 7) COMPLETE
-**Plan**: 04 of 4
-**Status**: Phase complete
-**Last activity**: 2026-01-22 - Completed 06-04-PLAN.md
+**Phase**: 07-deployment (7 of 7)
+**Plan**: 02 of ?
+**Status**: In progress
+**Last activity**: 2026-01-22 - Completed 07-02-PLAN.md
 
 Progress: [██████░░░░] 6/7 phases complete
 
@@ -20,7 +20,7 @@ Progress: [██████░░░░] 6/7 phases complete
 | 04 | complete | 3/3 |
 | 05 | complete | 5/5 |
 | 06 | complete | 4/4 |
-| 07 | pending | 0/? |
+| 07 | in progress | 2/? |
 
 ## Decisions Made
 
@@ -78,6 +78,9 @@ Progress: [██████░░░░] 6/7 phases complete
 - **2026-01-22**: ErrorDisplay as reusable component with callback props for retry/dismiss (06-04)
 - **2026-01-22**: Traefik config stored in project; symlink to active Traefik instance (06-04)
 - **2026-01-22**: host.docker.internal for Docker Traefik to reach host services (06-04)
+- **2026-01-22**: Static files only activate if frontend/dist exists (07-02)
+- **2026-01-22**: API routes registered before static files for precedence (07-02)
+- **2026-01-22**: Catch-all serves index.html for client-side routing (07-02)
 
 ## Blockers
 
@@ -101,12 +104,17 @@ Frontend delivers complete extraction workflow:
 - HTML and CSV downloads
 - Error handling with retry/dismiss
 
-Next: Phase 07 - Deployment to Iyeska HQ infrastructure
+Phase 07 (Deployment) IN PROGRESS:
+- Plan 01: CORS update for production origin (completed)
+- Plan 02: Static file serving for frontend (completed)
+
+FastAPI now serves both API and React frontend from single process.
+Ready for PM2 configuration and Cloudflare Tunnel setup.
 
 Total tests: 169 passing
 
 ## Session Continuity
 
-Last session: 2026-01-22T17:30:00Z
-Stopped at: Completed 06-04-PLAN.md (Phase 6 complete)
+Last session: 2026-01-22T17:59:49Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
