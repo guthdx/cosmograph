@@ -214,12 +214,12 @@ Plans:
 **Key Deliverables**:
 1. PM2 ecosystem.config.js for process management
 2. FastAPI serving static frontend files
-3. Cloudflare Tunnel configuration for cosmograph.iyeska.net
+3. Cloudflare Tunnel configuration for cosmo.iyeska.net
 4. Deploy script for automated updates
 5. End-to-end validation with real documents
 
 **Success Criteria**:
-- [ ] Accessible at https://cosmograph.iyeska.net
+- [ ] Accessible at https://cosmo.iyeska.net
 - [ ] PM2 shows healthy process
 - [ ] Real client document processed successfully
 - [ ] Deployment documented
@@ -277,7 +277,7 @@ After Phase 7, verify:
 2. [ ] LLM extraction with approval gate works
 3. [ ] Custom patterns loaded from YAML
 4. [ ] CLI still works as before
-5. [ ] Deployed to cosmograph.iyeska.net
+5. [ ] Deployed to cosmo.iyeska.net
 6. [ ] One real client document processed
 
 ---

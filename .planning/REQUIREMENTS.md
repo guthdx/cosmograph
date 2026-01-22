@@ -230,7 +230,7 @@ v0.2.0 is complete when:
 3. [ ] Pattern config loads from YAML
 4. [ ] Web UI uploads files and displays results
 5. [ ] Deployed to 192.168.11.20 via PM2
-6. [ ] Accessible at cosmograph.localhost (dev) / cosmograph.iyeska.net (prod)
+6. [ ] Accessible at cosmograph.localhost (dev) / cosmo.iyeska.net (prod)
 7. [ ] One real client document set processed end-to-end
 8. [ ] CLI still works (regression check)
 

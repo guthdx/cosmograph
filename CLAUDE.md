@@ -18,7 +18,7 @@ This project follows Iyeska standard stack (see `~/terminal_projects/claude_code
 | Backend | FastAPI 0.115+ | v0.2.0 addition |
 | Frontend | React + TypeScript + Vite | v0.2.0 addition |
 | Python | 3.13 (MacPorts) | `/opt/local/bin/python3.13` |
-| Deployment | PM2 on Ubuntu 192.168.11.20 | cosmograph.iyeska.net |
+| Deployment | PM2 on Ubuntu 192.168.11.20 | cosmo.iyeska.net |
 | Dev Proxy | Traefik | cosmograph.localhost |
 
 **Data Sovereignty**: All processing on Iyeska infrastructure. LLM calls require explicit approval.

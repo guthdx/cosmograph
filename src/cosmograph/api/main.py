@@ -43,7 +43,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:5173",
         "http://cosmograph.localhost",
-        "https://cosmograph.iyeska.net",
+        "https://cosmo.iyeska.net",
     ],
     allow_credentials=True,
     allow_methods=["*"],

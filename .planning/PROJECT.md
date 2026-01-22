@@ -68,7 +68,7 @@ Working CLI tool with:
 | Database | PostgreSQL | Job queue, results cache (v0.3+) |
 | LLM | Claude API (Anthropic) | Smart extraction, your cost center |
 | Deployment | PM2 on Ubuntu 192.168.11.20 | Behind Traefik proxy |
-| DNS | cosmograph.iyeska.net | Cloudflare |
+| DNS | cosmo.iyeska.net | Cloudflare |
 
 ## Data Sovereignty Compliance
 
