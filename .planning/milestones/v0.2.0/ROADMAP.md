@@ -165,20 +165,16 @@ GET  /health              - Health check
 
 ### Phase 6: React Frontend
 
+**Status**: Planned (2026-01-22)
 **Goal**: Browser UI for document processing
 
-**Rationale**: Operators need visual interface, not just CLI.
+**Plans:** 4 plans
 
-**Tasks**:
-1. Initialize Vite + React + TypeScript in `frontend/`
-2. Create upload component (drag & drop + file picker)
-3. Create extraction options form (method, patterns)
-4. Implement progress display during extraction
-5. Create graph preview component (embed D3.js or iframe)
-6. Add download buttons (HTML, CSV)
-7. Add error display for failures
-8. Style with minimal, functional CSS (not over-designed)
-9. Add Traefik config for `cosmograph.localhost`
+Plans:
+- [ ] 06-01-PLAN.md — Initialize Vite project and create API service layer
+- [ ] 06-02-PLAN.md — Create file upload and extraction options components
+- [ ] 06-03-PLAN.md — Implement progress display, graph preview, and downloads
+- [ ] 06-04-PLAN.md — Add error handling and Traefik configuration
 
 **Success Criteria**:
 - [ ] Can upload file through browser
@@ -275,3 +271,4 @@ After Phase 7, verify:
 *Phase 3 planned: 2026-01-21*
 *Phase 4 planned: 2026-01-21*
 *Phase 5 planned: 2026-01-21*
+*Phase 6 planned: 2026-01-22*
