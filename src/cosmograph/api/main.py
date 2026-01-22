@@ -6,7 +6,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
 
 from cosmograph import __version__
 
@@ -17,6 +16,7 @@ from .exceptions import (
     job_not_found_handler,
 )
 from .routes import extract, graph, health
+from .static import setup_static_files
 
 logger = logging.getLogger(__name__)
 
@@ -59,8 +59,5 @@ app.include_router(health.router)
 app.include_router(extract.router)
 app.include_router(graph.router)
 
-
-@app.get("/", include_in_schema=False)
-async def root() -> RedirectResponse:
-    """Redirect root to API documentation."""
-    return RedirectResponse(url="/docs")
+# Setup static file serving (must be after routers for API precedence)
+setup_static_files(app)
