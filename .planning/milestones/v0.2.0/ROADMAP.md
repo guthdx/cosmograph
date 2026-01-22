@@ -14,7 +14,7 @@ Transform Cosmograph from CLI tool to web-accessible service for Iyeska team to 
 | 4 | LLM Extractor | Phase 1 | Claude API integration with approval gate |
 | 5 | FastAPI Backend | Phases 1-4 | Web API wrapping extractors |
 | 6 | React Frontend | Phase 5 | Upload UI, results display |
-| 7 | Deployment | Phase 6 | PM2, Traefik, DNS setup |
+| 7 | Deployment | Phase 6 | PM2, Cloudflare Tunnel, production setup |
 
 ## Detailed Phases
 
@@ -199,18 +199,24 @@ Plans:
 
 ### Phase 7: Deployment
 
+**Status**: Planned (2026-01-22)
 **Goal**: Running on Iyeska HQ infrastructure
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Production config (vite base path, CORS, ecosystem.config.js, deploy.sh)
+- [ ] 07-02-PLAN.md — Static file serving (FastAPI serves React frontend)
+- [ ] 07-03-PLAN.md — Server deployment and validation (human-action checkpoints)
 
 **Rationale**: Tool needs to be accessible from any Iyeska machine.
 
-**Tasks**:
-1. Create PM2 ecosystem.config.js for backend
-2. Build frontend for production
-3. Configure Traefik route on Ubuntu server
-4. Set up DNS for cosmograph.iyeska.net (Cloudflare)
-5. Test deployment end-to-end
-6. Document deployment in CLAUDE.md
-7. Process real client document set as validation
+**Key Deliverables**:
+1. PM2 ecosystem.config.js for process management
+2. FastAPI serving static frontend files
+3. Cloudflare Tunnel configuration for cosmograph.iyeska.net
+4. Deploy script for automated updates
+5. End-to-end validation with real documents
 
 **Success Criteria**:
 - [ ] Accessible at https://cosmograph.iyeska.net
@@ -282,3 +288,4 @@ After Phase 7, verify:
 *Phase 4 planned: 2026-01-21*
 *Phase 5 planned: 2026-01-21*
 *Phase 6 planned: 2026-01-22*
+*Phase 7 planned: 2026-01-22*
